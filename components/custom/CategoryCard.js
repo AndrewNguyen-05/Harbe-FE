@@ -2,7 +2,7 @@ import React from "react";
 
 const CategoryCard = ({ categoryItem }) => {
   return (
-    <div className="border p-4 w-52 h-40 hover:shadow-xl">
+    <div className="p-4 w-52 h-40 hover:shadow-xl">
       <div className="flex justify-center">
         <img
           src={categoryItem.url}

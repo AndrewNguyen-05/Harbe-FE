@@ -4,33 +4,44 @@ import product1 from "@/public/pictures/product/product1.jpg";
 import Image from "next/image";
 import trimText from "@/utils/trimText";
 import { convertPrice } from "@/utils/convertPrice";
+import { convertNumber } from "@/utils/convertNumber";
 
-const ProductCard = () => {
+const ProductCard = ({ id, product }) => {
   return (
-    <Card className="w-[200px] p-0 shadow-md hover:border-blue-500 hover:cursor-pointer">
+    <Card className="w-[210px] h-full flex-col justify-between rounded-md p-0 shadow-md hover:border-blue-500 hover:cursor-pointer">
       <CardHeader>
-        <Image src={product1} width={200} alt="product-prototype" />
+        <img
+          src={product.thumbnailUrl}
+          className="w-full h-[200px]"
+          alt="product-prototype"
+        />
       </CardHeader>
       <CardContent className="px-2 space-y-2 py-2">
         {/* Tên sp */}
-        <div className="text-xs">
-          {trimText(
-            "Chuột không dây Logitech M330 Silent Plus - Giảm ồn, USB, thuận tay phải, PC/ Laptop",
-            53
-          )}
-        </div>
+        <div className="text-xs">{trimText(product.name, 50)}</div>
 
         {/* Giá tiền */}
         <div className="flex gap-2">
           <div className="flex text-warning">
-            <div>{convertPrice(339000)}</div>
-            <div className="text-xs">₫</div>
+            <div className="">₫</div>
+            <div>
+              {convertPrice(
+                product.price - product.price * product.discountRate * 0.01
+              )}
+            </div>
           </div>
-          <div className="flex text-gray-500 line-through text-xs">
-            <div>{convertPrice(339000)}</div>
-            <div className="text-xs">₫</div>
-          </div>
-          <div className="bg-red-100 text-warning text-xs h-fit">-6%</div>
+
+          {product.discountRate > 0 && (
+            <>
+              <div className="flex text-gray-500 line-through text-xs">
+                <div className="text-xs">₫</div>
+                <div>{trimText(convertPrice(product.price), 7)}</div>
+              </div>
+              <div className="bg-red-100 text-warning text-xs h-fit">
+                -{product.discountRate}%
+              </div>
+            </>
+          )}
         </div>
 
         <div className="flex text-xs items-center mt-2 gap-2">
@@ -48,8 +59,8 @@ const ProductCard = () => {
               </svg>
             ))}
           </div>
-          <div className="text-gray-500">(120)</div>
-          <div>Đã bán 17,7k</div>
+          <div className="text-gray-500">({product.reviewCount})</div>
+          <div>Đã bán {convertNumber(product.quantitySold, 1)}</div>
         </div>
       </CardContent>
     </Card>

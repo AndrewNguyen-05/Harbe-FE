@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import { useState, useEffect } from "react";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import BorderSide from "./custom/BorderSide";
 import CarouselPromotion from "./custom/CarouselPromotion";
@@ -7,12 +8,21 @@ import smallPromo2 from "@/public/pictures/promotion/smallPromo2.jpg";
 import Image from "next/image";
 import ProductCard from "./custom/ProductCard";
 import Link from "next/link";
-import { Cat } from "lucide-react";
 import CategoryCard from "./custom/CategoryCard";
+import { getListProduct } from "@/services/productServices";
 
 const HomePage = () => {
-  const productSlug = "chuot-khong-day-logitech-m330-silent-plus";
-  const productId = "1";
+  const [productList, setProductList] = useState([]);
+
+  const getProductData = async () => {
+    const data = await getListProduct();
+    console.log(">>> check product_list:", data);
+    setProductList(data.content);
+  };
+
+  useEffect(() => {
+    getProductData();
+  }, []);
 
   const arrCategory = [
     {
@@ -189,18 +199,18 @@ const HomePage = () => {
       {/* Promotion */}
       <div className="w-full flex justify-center bg-white">
         <div className="flex gap-1 w-fit ">
-          <div className="w-[840px]">
+          <div className="w-[880px]">
             <CarouselPromotion />
           </div>
           <div className="space-y-1">
-            <Image src={smallPromo1} width={415} alt="promotion-default" />
-            <Image src={smallPromo2} width={415} alt="promotion-default" />
+            <Image src={smallPromo1} width={435} alt="promotion-default" />
+            <Image src={smallPromo2} width={435} alt="promotion-default" />
           </div>
         </div>
       </div>
 
       {/* Category */}
-      <div className="bg-white flex flex-wrap my-7 mx-32 items-center justify-center py-2">
+      <div className="bg-white flex flex-wrap my-7 mx-24 items-center justify-center py-2">
         {arrCategory.map((item, index) => (
           <Link href="/category" key={index}>
             <CategoryCard categoryItem={item} />
@@ -209,10 +219,10 @@ const HomePage = () => {
       </div>
 
       {/* Products */}
-      <div className="flex flex-wrap px-20 justify-center gap-3 mt-5">
-        {Array.from({ length: 24 }).map((_, index) => (
-          <Link href={`/product/${productSlug}/${productId}`} key={index}>
-            <ProductCard />
+      <div className="flex flex-wrap mx-24 justify-center gap-3 mt-5">
+        {productList.map((item, index) => (
+          <Link href={`/product/${item.productSlug}/${item.id}`} key={index}>
+            <ProductCard id={item.id} product={item} />
           </Link>
         ))}
       </div>
