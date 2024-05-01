@@ -67,7 +67,11 @@ const Header = () => {
                 </svg>
                 <div>Tài khoản</div>
               </div>
-              <div className="flex items-center border-l-2 pl-6 col-span-1 text-primary">
+              {/* Cart */}
+              <Link
+                href="/cart"
+                className="flex items-center border-l-2 pl-6 col-span-1 text-primary"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -85,7 +89,7 @@ const Header = () => {
                 <div className="mb-4 w-5 h-4 rounded-full text-white flex items-center justify-center text-xs bg-red-500">
                   0
                 </div>
-              </div>
+              </Link>
             </div>
           </div>
 
