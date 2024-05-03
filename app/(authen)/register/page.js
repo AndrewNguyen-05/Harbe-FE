@@ -21,22 +21,6 @@ const page = () => {
     console.log(res);
   };
 
-  const handleNameInputChange = (event) => {
-    setName(event.target.value);
-  };
-
-  const handleUsernameInputChange = (event) => {
-    setUsername(event.target.value);
-  };
-
-  const handleEmailInputChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordInputChange = (event) => {
-    setPassword(event.target.value);
-  };
-
   return (
     <>
       <div className="bg-blue-100 flex flex-row items-center justify-evenly py-[100px]">
@@ -55,26 +39,26 @@ const page = () => {
           <input
             placeholder="Họ và tên"
             className="w-full text-[14px] focus:outline-none focus:border-blue-600 focus:border-2 py-[10px] px-[20px] rounded border-2 border-gray-300 mt-[32px]"
-            onChange={handleNameInputChange}
+            onChange={(e) => {setName(e.target.value)}}
           ></input>
 
           <input
             placeholder="Email"
             className="w-full text-[14px] focus:outline-none focus:border-blue-600 focus:border-2 py-[10px] px-[20px] rounded border-2 border-gray-300 mt-[20px]"
-            onChange={handleEmailInputChange}
+            onChange={(e) => {setEmail(e.target.value)}}
           ></input>
 
           <input
             placeholder="Tên đăng nhập"
             className="w-full text-[14px] focus:outline-none focus:border-blue-600 focus:border-2 py-[10px] px-[20px] rounded border-2 border-gray-300 mt-[20px]"
-            onChange={handleUsernameInputChange}
+            onChange={(e) => {setUsername(e.target.value)}}
           ></input>
 
           <input
             placeholder="Mật khẩu"
             type="password"
             className="w-full text-[14px] focus:outline-none focus:border-blue-600 focus:border-2 py-[10px] px-[20px] rounded border-2 border-gray-300 mt-[20px]"
-            onChange={handlePasswordInputChange}
+            onChange={(e) => {setPassword(e.target.value)}}
           ></input>
 
           <button
