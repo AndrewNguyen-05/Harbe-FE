@@ -1,4 +1,8 @@
+"use server";
+
 import axios from "axios";
+import { serialize } from "cookie";
+import { cookies } from "next/headers";
 
 const register = async (username, name, email, password) => {
   try {
@@ -41,22 +45,28 @@ const login = async (username, password) => {
     );
 
     if (res && res.data) {
-      localStorage.setItem("accessToken", res.data.access_token);
-      localStorage.setItem("role", res.data.scope);
-      localStorage.setItem("refreshToken", res.data.refresh_token);
+      const cookieStore = cookies();
+      const { access_token: accessToken, refresh_token: refreshToken } =
+        res.data;
+
+      cookieStore.set("accessToken", accessToken);
+      cookieStore.set("refreshToken", refreshToken);
+
       return res.data;
     }
   } catch (error) {
-    return error.response;
+    return error.message;
   }
 };
 
-const logout = () => {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("role");
-  localStorage.removeItem("refreshToken");
+const logout = async () => {};
+
+const getSession = async () => {
+  const cookieStore = cookies();
+  const session = cookieStore.get("session")?.value;
+
+  if (session) return session;
+  else return null;
 };
 
-const getToken = () => localStorage.getItem("token");
-
-export { register, login, logout, getToken };
+export { register, login, logout, getSession };

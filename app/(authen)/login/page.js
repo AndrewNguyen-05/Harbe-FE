@@ -7,17 +7,19 @@ import logo2 from "../../../public/ic_logo_2.svg";
 import facebookLogo from "../../../public/ic_facebook_logo.svg";
 import googleLogo from "../../../public/ic_goole_logo.svg";
 import { useState } from "react";
-import { login } from "@/services/authServices";
-import { jwtDecode } from "jwt-decode";
+import { getSession, login } from "@/services/authServices";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    const res = await login(username, password);
-    console.log(new Date(jwtDecode(res.access_token).exp));
+    await login(username, password);
+    router.replace(`/`);
   };
 
   return (
@@ -42,6 +44,7 @@ export default function LoginPage() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Email/Số điện thoại/Tên đăng nhập"
               className="w-full text-sm focus:outline-none focus:border-blue-600 focus:border-2 py-[10px] px-[20px] rounded border-2 border-gray-300 mt-[32px]"
+              required
             />
 
             <input
@@ -51,6 +54,7 @@ export default function LoginPage() {
               placeholder="Mật khẩu"
               className="w-full text-sm focus:outline-none focus:border-blue-600 focus:border-2 py-[10px] px-[20px] rounded border-2 border-gray-300 mt-[20px]"
               type="password"
+              required
             />
 
             <button
