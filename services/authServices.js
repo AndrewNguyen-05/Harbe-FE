@@ -1,10 +1,10 @@
 "use server";
 
 import axios from "axios";
-import { serialize } from "cookie";
+import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 
-const register = async (username, name, email, password) => {
+export const register = async (username, name, email, password) => {
   try {
     const res = await axios.post("http://localhost:8080/api/v1/auth/signup", {
       username: username,
@@ -21,7 +21,7 @@ const register = async (username, name, email, password) => {
   }
 };
 
-const login = async (username, password) => {
+export const login = async (username, password) => {
   const data = {
     grant_type: "password",
     username: username,
@@ -51,22 +51,42 @@ const login = async (username, password) => {
 
       cookieStore.set("accessToken", accessToken);
       cookieStore.set("refreshToken", refreshToken);
-
-      return res.data;
+    } else {
+      throw new Error("Failed to login.");
     }
   } catch (error) {
-    return error.message;
+    console.log(error);
   }
 };
 
-const logout = async () => {};
-
-const getSession = async () => {
-  const cookieStore = cookies();
-  const session = cookieStore.get("session")?.value;
-
-  if (session) return session;
-  else return null;
+export const logout = async () => {
+  try {
+    const cookieStore = cookies();
+    cookieStore.delete("accessToken");
+    cookieStore.delete("refreshToken");
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-export { register, login, logout, getSession };
+export const getSession = async () => {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+  if (accessToken) {
+    const user = jwtDecode(accessToken);
+
+    return user;
+  } else {
+    return undefined;
+  }
+};
+
+export const getAccessToken = async () => {
+  const cookieStore = cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+  if (accessToken) {
+    return accessToken;
+  } else {
+    return undefined;
+  }
+};

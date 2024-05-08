@@ -7,7 +7,7 @@ import logo2 from "../../../public/ic_logo_2.svg";
 import facebookLogo from "../../../public/ic_facebook_logo.svg";
 import googleLogo from "../../../public/ic_goole_logo.svg";
 import { useState } from "react";
-import { getSession, login } from "@/services/authServices";
+import { getSession, login, logout } from "@/services/authServices";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
@@ -64,7 +64,13 @@ export default function LoginPage() {
               ĐĂNG NHẬP
             </button>
           </form>
-
+          <button
+            type="text"
+            className="w-full bg-blue-600 text-white mt-[32px] rounded py-[12px] hover:bg-blue-400"
+            onClick={() => logout()}
+          >
+            ĐĂNG XUẤT
+          </button>
           <Link href={"/"} className="hover:text-gray-600">
             <div className="text-[14px] text-blue-600 mt-[8px] hover:decoration-solid hover:underline">
               Quên mật khẩu
