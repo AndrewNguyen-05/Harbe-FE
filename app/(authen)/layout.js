@@ -19,9 +19,9 @@ export default function LoginLayout({ children }) {
     }
   }, [pathName]);
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <HeaderWithoutSearch pageTitle={title}></HeaderWithoutSearch>
-      {children}
-    </>
+      <div className="flex flex-grow">{children}</div>
+    </div>
   );
 }
