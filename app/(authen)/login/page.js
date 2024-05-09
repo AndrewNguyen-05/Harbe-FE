@@ -8,6 +8,9 @@ import googleLogo from "../../../public/ic_goole_logo.svg";
 import { useState } from "react";
 import { login } from "@/services/authServices";
 import { jwtDecode } from "jwt-decode";
+import React from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -16,7 +19,9 @@ export default function LoginPage() {
   const handleLogin = async (event) => {
     event.preventDefault();
     const res = await login(username, password);
-    console.log(new Date(jwtDecode(res.access_token).exp));
+    if (res === "User register successfully!") toast.success(res);
+    else toast.error(res.message);
+    console.log(res);
   };
 
   return (
@@ -103,6 +108,7 @@ export default function LoginPage() {
             </Link>
           </div>
         </div>
+        <ToastContainer position="top-right" />
       </div>
     </>
   );
