@@ -20,7 +20,7 @@ const page = () => {
 
   return (
     <>
-      <div className="bg-blue-100 flex flex-row items-center justify-evenly py-[100px]">
+      <div className="bg-blue-100 flex flex-row items-center justify-evenly w-full">
         {/* Logo */}
         <Image
           src={logo2}

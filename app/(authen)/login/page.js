@@ -8,6 +8,8 @@ import googleLogo from "../../../public/ic_goole_logo.svg";
 import { useState } from "react";
 import { getSession, login, logout } from "@/services/authServices";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -22,7 +24,7 @@ export default function LoginPage() {
 
   return (
     <>
-      <div className="bg-blue-100 flex flex-row items-center justify-evenly">
+      <div className="bg-blue-100 flex flex-row items-center justify-evenly w-full">
         {/* Logo */}
         <Image
           src={logo2}
@@ -61,13 +63,7 @@ export default function LoginPage() {
               ĐĂNG NHẬP
             </button>
           </form>
-          <button
-            type="text"
-            className="w-full bg-blue-600 text-white mt-[32px] rounded py-[12px] hover:bg-blue-400"
-            onClick={() => logout()}
-          >
-            ĐĂNG XUẤT
-          </button>
+
           <Link href={"/"} className="hover:text-gray-600">
             <div className="text-[14px] text-primary mt-[8px] hover:decoration-solid hover:underline">
               Quên mật khẩu
