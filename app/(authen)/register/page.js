@@ -5,9 +5,6 @@ import Image from "next/image";
 import logo2 from "../../../public/ic_logo_2.svg";
 import { useState } from "react";
 import { register } from "@/services/authServices";
-import React from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 const page = () => {
   const [name, setName] = useState("");
@@ -18,13 +15,6 @@ const page = () => {
   const handleRegisterButtonClick = async () => {
     console.log("Click", name, email, username, password);
     const res = await register(username, name, email, password);
-    if (res === "User register successfully!") toast.success(res);
-    else if (res.message) toast.error(res.message);
-    else {
-      if (res.email) toast.error(res.email);
-      if (res.name) toast.error(res.name);
-      if (res.password) toast.error(res.password);
-    }
     console.log(res);
   };
 
@@ -92,7 +82,6 @@ const page = () => {
             </Link>
           </div>
         </div>
-        <ToastContainer position="top-right" />
       </div>
     </>
   );
