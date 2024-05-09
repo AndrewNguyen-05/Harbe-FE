@@ -18,12 +18,11 @@ export default function LoginPage() {
   const handleLogin = async (event) => {
     event.preventDefault();
     await login(username, password);
-    router.replace(`/`);
   };
 
   return (
     <>
-      <div className="bg-blue-100 flex flex-row items-center justify-evenly py-[100px]">
+      <div className="bg-blue-100 flex flex-row items-center justify-evenly">
         {/* Logo */}
         <Image
           src={logo2}
@@ -43,7 +42,6 @@ export default function LoginPage() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Email/Số điện thoại/Tên đăng nhập"
               className="w-full text-sm focus:outline-none focus:border-primary py-[10px] px-[20px] rounded border-2 border-gray-300 mt-[24px]"
-
             />
 
             <input
