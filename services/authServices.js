@@ -57,6 +57,6 @@ const logout = () => {
   localStorage.removeItem("refreshToken");
 };
 
-const getToken = () => localStorage.getItem("token");
+const getToken = () => localStorage.getItem("accessToken");
 
 export { register, login, logout, getToken };
