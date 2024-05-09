@@ -150,7 +150,7 @@ const HomePage = () => {
         </div>
         <BorderSide />
         <div className="flex items-center gap-2">
-          <Avatar className="bg-primary flex justify-center items-center text-white bg-violet-600">
+          <Avatar className="bg-primary flex justify-center items-center text-white">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
