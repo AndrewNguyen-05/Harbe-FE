@@ -8,6 +8,9 @@ import googleLogo from "../../../public/ic_goole_logo.svg";
 import { useState } from "react";
 import { getSession, login, logout } from "@/services/authServices";
 import { useRouter } from "next/navigation";
+import React from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -17,8 +20,12 @@ export default function LoginPage() {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    await login(username, password);
-    router.replace(`/`);
+    const res = await login(username, password);
+    if (res === "User register successfully!") {
+      toast.success(res);
+      router.replace(`/`);
+    } else toast.error(res.message);
+    console.log(res);
   };
 
   return (
@@ -43,7 +50,6 @@ export default function LoginPage() {
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Email/Số điện thoại/Tên đăng nhập"
               className="w-full text-sm focus:outline-none focus:border-primary py-[10px] px-[20px] rounded border-2 border-gray-300 mt-[24px]"
-
             />
 
             <input
@@ -113,6 +119,7 @@ export default function LoginPage() {
             </Link>
           </div>
         </div>
+        <ToastContainer position="top-right" />
       </div>
     </>
   );
