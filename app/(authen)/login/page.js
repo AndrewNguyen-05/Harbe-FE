@@ -20,11 +20,11 @@ export default function LoginPage() {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    await login(username, password);
-    router.replace(`/`);
     const res = await login(username, password);
-    if (res === "User register successfully!") toast.success(res);
-    else toast.error(res.message);
+    if (res === "User register successfully!") {
+      toast.success(res);
+      router.replace(`/`);
+    } else toast.error(res.message);
     console.log(res);
   };
 
