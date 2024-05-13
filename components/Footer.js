@@ -4,40 +4,65 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <div className="flex justify-center bg-gray-100">
-      <div className="flex justify-between w-[1320px] p-4 bg-white rounded-md">
+    <div className="flex flex-col items-center justify-center bg-gray-100 pt-4 divide-y">
+      <div className="flex justify-between w-[1320px] p-4 bg-white rounded-t-md">
         <div className="flex flex-col gap-4 w-1/5">
           <span>Hỗ trợ khách hàng</span>
           <div className="space-y-2">
             <div className="grid grid-cols-2">
               <span className="text-gray-500 text-xs">Backend Developer: </span>
-              <span className="text-primary text-xs hover:underline hover:cursor-pointer">
-                Đức Mạnh
-              </span>
+              <Link
+                className="flex"
+                href="https://www.facebook.com/hoangducmanh254"
+              >
+                <span className="text-primary text-xs hover:underline hover:cursor-pointer">
+                  Đức Mạnh
+                </span>
+              </Link>
             </div>
             <div className="grid grid-cols-2">
               <span className="text-gray-500 text-xs">Backend Developer: </span>
-              <span className="text-primary text-xs hover:underline hover:cursor-pointer">
-                Hoàng Anh
-              </span>
+              <Link
+                className="flex"
+                href="https://www.facebook.com/andrew.nguyen0505"
+              >
+                <span className="text-primary text-xs hover:underline hover:cursor-pointer">
+                  Hoàng Anh
+                </span>
+              </Link>
             </div>
             <div className="grid grid-cols-2">
               <span className="text-gray-500 text-xs">Frontend Developer:</span>
-              <span className="text-primary text-xs hover:underline hover:cursor-pointer">
-                Bảo Duy
-              </span>
+              <Link
+                className="flex"
+                href="https://www.facebook.com/baoduy.truonghoang.581/"
+              >
+                <span className="text-primary text-xs hover:underline hover:cursor-pointer">
+                  Bảo Duy
+                </span>
+              </Link>
             </div>
             <div className="grid grid-cols-2">
               <span className="text-gray-500 text-xs">Frontend Developer:</span>
-              <span className="text-primary text-xs hover:underline hover:cursor-pointer">
-                Ngọc Phước
-              </span>
+              <Link
+                className="flex"
+                href="https://www.facebook.com/phuocphan162"
+              >
+                <span className="text-primary text-xs hover:underline hover:cursor-pointer">
+                  Ngọc Phước
+                </span>
+              </Link>
             </div>
             <div className="grid grid-cols-2">
               <span className="text-gray-500 text-xs">Frontend Developer:</span>
-              <span className="text-primary text-xs hover:underline hover:cursor-pointer">
-                Đình Tâm
-              </span>
+              <Link
+                className="flex"
+                href="https://www.facebook.com/profile.php?id=100036010281125"
+              >
+                <span className="text-primary text-xs hover:underline hover:cursor-pointer">
+                  Đình Tâm
+                </span>
+              </Link>
             </div>
           </div>
         </div>
@@ -88,6 +113,15 @@ const Footer = () => {
               <AvatarImage src="https://cdn-icons-png.flaticon.com/512/25/25231.png" />
               <AvatarFallback>GitHub</AvatarFallback>
             </Avatar>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col w-[1320px] p-4 bg-white gap-4">
+        <div>Công ty TNHH Harbe</div>
+        <div className="space-y-2">
+          <div className="text-xs text-gray-500">
+            Trường Đại học Công nghệ Thông tin - Đường Hàn Thuyên, khu phố 6 P,
+            Thủ Đức, Thành phố Hồ Chí Minh
           </div>
         </div>
       </div>
