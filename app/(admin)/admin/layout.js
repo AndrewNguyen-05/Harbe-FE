@@ -42,9 +42,9 @@ export default function AdminLayout({ children }) {
   return (
     <div className="min-h-screen flex flex-row">
       <AdminSideBar menu={menu} others={others} />
-      <div className="flex-grow">
+      <div className="flex-grow flex flex-col">
         <AdminHeader title={headerTitle} />
-        <div>{children}</div>
+        <div className="flex-grow">{children}</div>
       </div>
     </div>
   );

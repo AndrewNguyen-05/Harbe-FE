@@ -11,8 +11,20 @@ const AdminHeader = ({ title }) => {
           <div className="text-[15px] w-fit font-medium">Tran Dinh Tam</div>
           <div className="font-light text-[12px] w-fit">Admin</div>
         </div>
-        <Image src={userAvatar} width={46} height={46} className="ml-[16px]" />
-        <Image src={iconDown} width={20} height={20} className="ml-[8px]" />
+        <Image
+          alt="User avatar"
+          src={userAvatar}
+          width={46}
+          height={46}
+          className="ml-[16px]"
+        />
+        <Image
+          alt="Icon down"
+          src={iconDown}
+          width={20}
+          height={20}
+          className="ml-[8px]"
+        />
       </div>
     </div>
   );
