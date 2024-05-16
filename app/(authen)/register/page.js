@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import iconEye from "@/public/ic_eye.svg";
 import iconHidden from "@/public/ic_hidden.svg";
 
-const page = () => {
+const RegisterPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -145,4 +145,4 @@ const page = () => {
     </>
   );
 };
-export default page;
+export default RegisterPage;
