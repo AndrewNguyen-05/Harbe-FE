@@ -26,18 +26,27 @@ export function CustomCreateDialog({ itemTrigger, title, itemContent }) {
         </DialogHeader>
         <DialogFooter>
           <div className="flex flex-row gap-[12px]">
-            <button
-              className="text-blue-600 text-[16px] border-[1px] border-blue-600 hover:bg-blue-100 px-[16px] py-[6px] rounded-[8px] hover:opacity-80"
-              onClick={() => {
+            <CustomAlertDialog
+              onConfirm={() => {
                 setOpen(false);
               }}
-            >
-              Hủy bỏ
-            </button>
+              itemTrigger={
+                <button
+                  className="text-blue-600 text-[16px] border-[1px] border-blue-600 hover:bg-blue-100 px-[16px] py-[8px] rounded-[6px] hover:opacity-80"
+                  onClick={() => {}}
+                >
+                  Hủy bỏ
+                </button>
+              }
+              title={"Bạn có chắc chắn muốn hủy thao tác này?"}
+              content={
+                "Những nội dung bạn sửa đổi sẽ bị mất. Thao tác này không thể hoàn tác!"
+              }
+            />
             <CustomAlertDialog
               itemTrigger={
                 <button
-                  className="text-white text-[16px] bg-blue-600 px-[16px] py-[6px] rounded-[8px] hover:opacity-80"
+                  className="text-white text-[16px] bg-blue-600 px-[16px] py-[8px] rounded-[6px] hover:opacity-80"
                   onClick={() => {}}
                 >
                   Thêm

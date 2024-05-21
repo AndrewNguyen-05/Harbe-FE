@@ -2,6 +2,8 @@
 
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
+import iconAddImage from "@/public/ic_admin/ic_add_image.svg";
+import Image from "next/image";
 
 const ImagePicker = ({ onFileAccepted }) => {
   const onDrop = useCallback(
@@ -23,11 +25,19 @@ const ImagePicker = ({ onFileAccepted }) => {
     >
       <input {...getInputProps()} />
       {isDragActive ? (
-        <p>Drop the files here ...</p>
+        <div className="flex flex-col items-center justify-center">
+          <Image src={iconAddImage} height={20} width={20} />
+          <div className="w-[180px] text-center text-blue-600 mt-[8px]">
+            Kéo thả file vào đây...
+          </div>
+        </div>
       ) : (
-        <p className="w-[200px]">
-          Drag 'n' drop some files here, or click to select files
-        </p>
+        <div className="flex flex-col items-center justify-center">
+          <Image alt="Add image" src={iconAddImage} height={32} width={32} />
+          <div className="w-[180px] text-center text-blue-600 mt-[8px]">
+            Kéo thả hoặc click để chọn ảnh sản phẩm
+          </div>
+        </div>
       )}
     </div>
   );
