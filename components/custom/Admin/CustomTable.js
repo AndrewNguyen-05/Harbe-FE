@@ -1,21 +1,27 @@
+import { Checkbox } from "@radix-ui/react-checkbox";
+import { CustomCheckbox } from "./CustomCheckbox";
+
 const CustomTable = ({ data, renderRow, field }) => {
   return (
     <table className="text-left border-0 border-collapse table-fixed w-full">
       <thead>
         <tr className="border-b-[1px] border-gray-300 w-full">
+          {/* <th>
+            <CustomCheckbox />
+          </th> */}
           {field.map((item, index) => (
             <th
               style={{
                 width:
                   item === "Tên"
-                    ? "35%"
+                    ? "36%"
                     : item === "Ảnh"
-                    ? "5%"
+                    ? "6%"
                     : item === "Giảm giá" || item === "Đánh giá"
-                    ? "8%"
+                    ? "7%"
                     : item === "Giá" || item === "Hãng"
-                    ? "12%"
-                    : "10%",
+                    ? "11%"
+                    : "9.5%",
               }}
               key={index}
             >
@@ -30,7 +36,7 @@ const CustomTable = ({ data, renderRow, field }) => {
             className="border-b-[1px] border-gray-300 cursor-pointer"
             key={index}
           >
-            {renderRow(item)}
+            {renderRow(item, index)}
           </tr>
         ))}
       </tbody>
