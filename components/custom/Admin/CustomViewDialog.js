@@ -27,7 +27,7 @@ export function CustomViewDialog({ itemTrigger, title, itemContent }) {
         </DialogHeader>
         <DialogFooter>
           <button
-            className="text-white text-[16px] bg-blue-600 px-[16px] py-[6px] rounded-[8px] hover:opacity-80 mt-[8px]"
+            className="text-white text-[16px] bg-blue-600 px-[16px] py-[8px] rounded-[6px] hover:opacity-80 mt-[8px]"
             onClick={() => {
               setOpen(false);
             }}

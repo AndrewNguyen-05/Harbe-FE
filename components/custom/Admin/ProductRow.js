@@ -134,7 +134,10 @@ const ProductRow = ({ product, className, onSelected, onClickViewDetail }) => {
                     <div>Thông tin chi tiết</div>
                     <div className="text-black text-base flex flex-col items-start justify-center bg-white p-[16px] rounded-[8px] border-[1.5px] border-gray-300 w-full">
                       {product.specifications.map((spec, index) => (
-                        <div className="flex flex-row justify-start items-start w-full">
+                        <div
+                          key={index}
+                          className="flex flex-row justify-start items-start w-full"
+                        >
                           <div className="font-semibold w-1/3">
                             <div>{spec.name}</div>
                           </div>
@@ -147,7 +150,10 @@ const ProductRow = ({ product, className, onSelected, onClickViewDetail }) => {
                         </div>
                       ))}
                       {product.options.map((spec, index) => (
-                        <div className="flex flex-row justify-start items-start w-full">
+                        <div
+                          key={index}
+                          className="flex flex-row justify-start items-start w-full"
+                        >
                           <div className="font-semibold w-1/3">
                             <div>{spec.name}</div>
                           </div>

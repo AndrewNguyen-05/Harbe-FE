@@ -10,25 +10,43 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
-export function CustomAlertDialog({ itemTrigger, title, content }) {
+export function CustomAlertDialog({
+  itemTrigger,
+  title,
+  content,
+  onConfirm,
+  onCancel,
+}) {
+  const [open, setOpen] = useState(false);
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <button>{itemTrigger}</button>
-      </AlertDialogTrigger>
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>{itemTrigger}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{content}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>
+          <button
+            className="bg-blue-50 py-[8px] px-[16px] border-blue-600 border-[1.5px] hover:opacity-80 rounded-[6px]"
+            onClick={() => {
+              setOpen(false);
+              onCancel && onCancel();
+            }}
+          >
             <div className="text-blue-600">Cancel</div>
-          </AlertDialogCancel>
-          <AlertDialogAction>
+          </button>
+          <button
+            className="bg-blue-600 py-[8px] px-[16px] hover:opacity-80 rounded-[6px]"
+            onClick={() => {
+              setOpen(false);
+              onConfirm && onConfirm();
+            }}
+          >
             <div className="text-white">Continue</div>
-          </AlertDialogAction>
+          </button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
