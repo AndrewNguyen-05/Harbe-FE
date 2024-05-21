@@ -10,8 +10,8 @@ import icPlus from "@/public/ic_admin/ic_plus.svg";
 import icEditBlue from "@/public/ic_admin/ic_edit_blue.svg";
 import icBin from "@/public/ic_admin/ic_bin.svg";
 import { PaginationSelection } from "@/components/HomePage";
-import ProductRow from "@/components/admin/ProductRow";
-import CustomTable from "@/components/admin/CustomTable";
+import ProductRow from "@/components/custom/Admin/ProductRow";
+import CustomTable from "@/components/custom/Admin/CustomTable";
 import { usePathname } from "next/navigation";
 
 const ProductAdminPage = () => {
@@ -30,6 +30,7 @@ const ProductAdminPage = () => {
     "Số lượng",
   ];
   const [totalProductQuantity, setTotalProductQuantity] = useState(0);
+  const [selectedProduct, setSelectedProduct] = useState([]);
 
   const getProductData = async () => {
     const data = await getListProduct(currentPage, itemsPerPage);
@@ -67,14 +68,20 @@ const ProductAdminPage = () => {
         </div>
 
         <div className="flex flex-row justify-center items-center gap-[16px] ml-[64px]">
-          <button className="border-warning border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-red-50 w-[110px]">
+          <button
+            className="border-warning border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-red-50 w-[110px]"
+            style={{ opacity: selectedProduct != -1 ? 1 : 0 }}
+          >
             <Image alt="Bin icon" src={icBin} width={12} height={12} />
             <div className="text-warning text-[14px] font-bold ml-[4px]">
               Xóa
             </div>
           </button>
 
-          <button className="border-blue-600 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-blue-50 w-[110px] ">
+          <button
+            className="border-blue-600 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-blue-50 w-[110px]"
+            style={{ opacity: selectedProduct != -1 ? 1 : 0 }}
+          >
             <Image alt="Edit icon" src={icEditBlue} width={12} height={12} />
             <div className="text-blue-600 text-[14px] font-bold ml-[4px]">
               Sửa
@@ -100,7 +107,20 @@ const ProductAdminPage = () => {
       <div className="py-[10px] flex flex-col justify-between items-center grow px-[32px] py-[20px] w-full">
         <CustomTable
           data={productList}
-          renderRow={(item) => <ProductRow product={item} />}
+          renderRow={(item, index) => (
+            <ProductRow
+              product={item}
+              onSelected={() => {
+                selectedProduct == index
+                  ? setSelectedProduct(-1)
+                  : setSelectedProduct(index);
+              }}
+              className={selectedProduct == index ? "bg-blue-400" : ""}
+              onClickViewDetail={() => {
+                console.log("View detail");
+              }}
+            />
+          )}
           field={productField}
         />
 
