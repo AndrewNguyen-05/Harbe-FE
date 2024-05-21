@@ -1,7 +1,6 @@
 "use client";
-import Breadcrumb from "@/components/admin/Breadcrumbs/Breadcrumb";
-import DefaultLayout from "@/components/admin/Layout/DefaultLayout";
-import TableTwo from "@/components/admin/Table/TableTwo";
+
+import React from "react";
 import SearchInput from "@/components/custom/SearchInput";
 import { getListProduct } from "@/services/productServices";
 import Image from "next/image";
@@ -12,7 +11,9 @@ import icBin from "@/public/ic_admin/ic_bin.svg";
 import { PaginationSelection } from "@/components/HomePage";
 import ProductRow from "@/components/custom/Admin/ProductRow";
 import CustomTable from "@/components/custom/Admin/CustomTable";
-import { usePathname } from "next/navigation";
+import { CustomCreateDialog } from "@/components/custom/Admin/CustomCreateDialog";
+import ImagePicker from "@/components/custom/Admin/ImagePicker";
+import DynamicImagePicker from "@/components/custom/Admin/DynamicImagePicker";
 
 const ProductAdminPage = () => {
   const [productList, setProductList] = useState([]);
@@ -36,6 +37,12 @@ const ProductAdminPage = () => {
     const data = await getListProduct(currentPage, itemsPerPage);
     setProductList(data.content);
     setTotalItems(data.totalElements);
+  };
+
+  const [selectedFiles, setSelectedFiles] = useState([]);
+
+  const handleFileAccepted = (files) => {
+    setSelectedFiles(files);
   };
 
   const getAllProductQuantity = async () => {
@@ -88,12 +95,87 @@ const ProductAdminPage = () => {
             </div>
           </button>
 
-          <button className="bg-blue-600 px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center w-[110px]">
-            <Image alt="Plus icon" src={icPlus} width={12} height={12} />
-            <div className="text-white text-[14px] font-bold  ml-[4px]">
-              Thêm
-            </div>
-          </button>
+          <CustomCreateDialog
+            itemTrigger={
+              <button className="bg-blue-600 px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center w-[110px]">
+                <Image alt="Plus icon" src={icPlus} width={12} height={12} />
+                <div className="text-white text-[14px] font-bold  ml-[4px]">
+                  Thêm
+                </div>
+              </button>
+            }
+            title={"Thêm sản phẩm"}
+            itemContent={
+              <div className="flex flex-col items-start justify-start w-full h-[500px] overflow-y-scroll">
+                <div className="flex flex-row w-full">
+                  <div className="p-[16px] bg-white rounded-[8px] border-[1.5px] border-gray-300">
+                    <div className="text-base text-black font-semibold">
+                      Ảnh sản phẩm
+                    </div>
+                    <div className="flex flex-row items-center justify-center p-[16px] bg-white rounded-[8px] border-[1.5px] border-gray-300 mt-[24px]">
+                      <ImagePicker onFileAccepted={handleFileAccepted} />
+                      {selectedFiles.length > 0 && (
+                        <div>
+                          <ul>
+                            {selectedFiles.map((file) => (
+                              <li
+                                key={file.name}
+                                className="ml-[16px] rounded-[8px]"
+                              >
+                                <Image
+                                  src={URL.createObjectURL(new Blob([file]))}
+                                  alt={file.name}
+                                  width={240}
+                                  height={240}
+                                />
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="p-[16px] bg-white rounded-[8px] border-[1.5px] border-gray-300 flex flex-grow flex-col mx-[16px]">
+                    <div className="text-base text-black font-semibold">
+                      Giá
+                    </div>
+                    <div className="flex flex-col items-start justify-start bg-white mt-[16px] flex-grow">
+                      <div className="w-full mt-[8px]">
+                        <div className="text-sm font-semibold text-black flex flex-col justify-start items-start">
+                          Giá cơ bản
+                        </div>
+                        <div className="w-full relative flex items-center justify-center flex-row">
+                          <input
+                            type="number"
+                            className="border-[1.5px] border-gray-300 bg-gray-50 focus:outline-none focus:border-blue-600 focus:border-[1.5px] text-black text-sm py-[8px] px-[16px] rounded-[6px] w-full mt-[4px]"
+                          />
+                          <div className="text-sm text-black absolute right-[40px] mt-[4px]">
+                            đ
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="w-full mt-[8px]">
+                        <div className="text-sm font-semibold text-black flex flex-col justify-start items-start">
+                          Giảm giá
+                        </div>
+                        <div className="w-full relative flex items-center justify-center flex-row">
+                          <input
+                            type="number"
+                            className="border-[1.5px] border-gray-300 bg-gray-50 focus:outline-none focus:border-blue-600 focus:border-[1.5px] text-black text-sm py-[8px] px-[16px] rounded-[6px] w-full mt-[4px]"
+                          />
+                          <div className="text-sm text-black absolute right-[40px] mt-[4px]">
+                            %
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          />
         </div>
       </div>
 
