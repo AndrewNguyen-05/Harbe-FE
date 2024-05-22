@@ -79,4 +79,31 @@ const updateProductById = async (product, token, id) => {
   }
 };
 
-export { getListProduct, getProductById, createProduct, updateProductById };
+const deleteProductById = async (token, id) => {
+  let config = {
+    maxBodyLength: Infinity,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    const res = await axios.delete(
+      `http://localhost:8080/api/v1/products/${id}`,
+      config
+    );
+    if (res && res.data) {
+      return res;
+    }
+  } catch (error) {
+    return error.response;
+  }
+};
+
+export {
+  getListProduct,
+  getProductById,
+  createProduct,
+  updateProductById,
+  deleteProductById,
+};
