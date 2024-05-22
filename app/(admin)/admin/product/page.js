@@ -2,7 +2,11 @@
 
 import React from "react";
 import SearchInput from "@/components/custom/SearchInput";
-import { createProduct, getListProduct } from "@/services/productServices";
+import {
+  createProduct,
+  getListProduct,
+  updateProductById,
+} from "@/services/productServices";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import icPlus from "@/public/ic_admin/ic_plus.svg";
@@ -15,6 +19,9 @@ import { CustomCreateDialog } from "@/components/custom/Admin/CustomCreateDialog
 import { uploadFile } from "@/services/firebaseService";
 import { getAccessToken, getSession } from "@/services/authServices";
 import { ProductInfoForm } from "@/components/custom/Admin/ProductInfoForm";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { CustomUpdateDialog } from "@/components/custom/Admin/CustomUpdateDialog";
 
 const ProductAdminPage = () => {
   const [productList, setProductList] = useState([]);
@@ -32,7 +39,7 @@ const ProductAdminPage = () => {
     "Số lượng",
   ];
   const [totalProductQuantity, setTotalProductQuantity] = useState(0);
-  const [selectedProduct, setSelectedProduct] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(-1);
   const [productSpecList, setProductSpecList] = useState([]);
   const [productOptionList, setProductOptionList] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -105,18 +112,167 @@ const ProductAdminPage = () => {
             </div>
           </button>
 
-          <button
-            className="border-blue-600 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-blue-50 w-[110px]"
-            style={{ opacity: selectedProduct != -1 ? 1 : 0 }}
-          >
-            <Image alt="Edit icon" src={icEditBlue} width={12} height={12} />
-            <div className="text-blue-600 text-[14px] font-bold ml-[4px]">
-              Sửa
-            </div>
-          </button>
+          {/* Update product dialog */}
+          <CustomUpdateDialog
+            confirmContent={"Cập nhật"}
+            onConfirm={async () => {
+              console.log("Confirm update product");
+              const imgURL = selectedFiles[0]
+                ? await uploadFile(selectedFiles[0])
+                : productList[selectedProduct].thumbnailUrl;
+              let token = "";
+              try {
+                token = await getAccessToken();
+              } catch (error) {
+                console.log(error);
+              }
+              const res = await updateProductById(
+                {
+                  name: productName,
+                  description: productDescription,
+                  brand: productBrand,
+                  price: productPrice,
+                  discountRate: productDiscount,
+                  quantitySold: productQuantity,
+                  thumbnailUrl: imgURL,
+                  options: productSpecList,
+                  specifications: productOptionList,
+                  categoryUrl: "new-cate",
+                },
+                token,
+                productList[selectedProduct].id
+              );
+              console.log(res);
+              if (res.status == 200) {
+                toast.success("Cập nhật sản phẩm thành công");
+                await getProductData();
+                resetState();
+              } else {
+                const errorArray = Object.entries(res.data);
+                errorArray.forEach((error) => {
+                  toast.error(error[1]);
+                });
+              }
+            }}
+            onCancel={() => {
+              console.log("Cancel update product");
+              resetState();
+            }}
+            itemTrigger={
+              <button
+                className="border-blue-600 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-blue-50 w-[110px]"
+                style={{ opacity: selectedProduct != -1 ? 1 : 0 }}
+                onClick={() => {
+                  resetState();
+                  setProductName(productList[selectedProduct].name);
+                  setProductDescription(
+                    productList[selectedProduct].description
+                  );
+                  setProductBrand(productList[selectedProduct].brand);
+                  setProductPrice(productList[selectedProduct].price);
+                  setProductDiscount(productList[selectedProduct].discountRate);
+                  setProductQuantity(productList[selectedProduct].quantitySold);
+                  setProductSpecList(
+                    productList[selectedProduct].specifications
+                  );
+                  setProductOptionList(productList[selectedProduct].options);
+                }}
+              >
+                <Image
+                  alt="Edit icon"
+                  src={icEditBlue}
+                  width={12}
+                  height={12}
+                />
+                <div className="text-blue-600 text-[14px] font-bold ml-[4px]">
+                  Sửa
+                </div>
+              </button>
+            }
+            title={"Cập nhật sản phẩm"}
+            itemContent={
+              <ProductInfoForm
+                selectedFiles={selectedFiles}
+                onFileAccepted={handleFileAccepted}
+                productBrand={productBrand}
+                onProductBrandChange={(e) => {
+                  setProductBrand(e.target.value);
+                }}
+                productPrice={productPrice}
+                onProductPriceChange={(e) => {
+                  setProductPrice(e.target.value);
+                }}
+                productDiscount={productDiscount}
+                onProductDiscountChange={(e) => {
+                  setProductDiscount(e.target.value);
+                }}
+                productQuantity={productQuantity}
+                onProductQuantityChange={(e) => {
+                  setProductQuantity(e.target.value);
+                }}
+                productName={productName}
+                onProductNameChange={(e) => {
+                  setProductName(e.target.value);
+                }}
+                productDescription={productDescription}
+                onProductDescriptionChange={(e) => {
+                  setProductDescription(e.target.value);
+                }}
+                productSpecList={productSpecList}
+                onSpecAdd={() => {
+                  setProductSpecList([
+                    ...productSpecList,
+                    { name: "", value: "" },
+                  ]);
+                }}
+                onSpecRemove={(index) => {
+                  setProductSpecList(
+                    productSpecList.filter((_, i) => i != index)
+                  );
+                }}
+                onSpecNameChange={(e, index) => {
+                  const temp = [...productSpecList];
+                  temp[index].name = e.target.value;
+                  setProductSpecList(temp);
+                }}
+                onSpecValueChange={(e, index) => {
+                  const temp = [...productSpecList];
+                  temp[index].value = e.target.value;
+                  setProductSpecList(temp);
+                }}
+                productOptionList={productOptionList}
+                onOptionAdd={() => {
+                  setProductOptionList([
+                    ...productOptionList,
+                    { name: "", value: "" },
+                  ]);
+                }}
+                onOptionRemove={(index) => {
+                  setProductOptionList(
+                    productOptionList.filter((_, i) => i != index)
+                  );
+                }}
+                onOptionNameChange={(e, index) => {
+                  const temp = [...productOptionList];
+                  temp[index].name = e.target.value;
+                  setProductOptionList(temp);
+                }}
+                onOptionValueChange={(e, index) => {
+                  const temp = [...productOptionList];
+                  temp[index].value = e.target.value;
+                  setProductOptionList(temp);
+                }}
+                productThumbnailUrl={
+                  selectedProduct != -1 &&
+                  productList[selectedProduct].thumbnailUrl
+                }
+              />
+            }
+          />
 
           {/* Create product dialog */}
           <CustomCreateDialog
+            confirmContent={"Thêm"}
             onConfirm={async () => {
               console.log("Confirm create product");
               const imgURL = selectedFiles[0]
@@ -128,7 +284,6 @@ const ProductAdminPage = () => {
               } catch (error) {
                 console.log(error);
               }
-              console.log("Token: ", token);
               const res = await createProduct(
                 {
                   name: productName,
@@ -145,8 +300,16 @@ const ProductAdminPage = () => {
                 token
               );
               console.log(res);
-              await getProductData();
-              // resetState();
+              if (res.status == 201) {
+                toast.success("Tạo sản phẩm thành công");
+                await getProductData();
+                resetState();
+              } else {
+                const errorArray = Object.entries(res.data);
+                errorArray.forEach((error) => {
+                  toast.error(error[1]);
+                });
+              }
             }}
             onCancel={() => {
               console.log("Cancel create product");
@@ -271,6 +434,7 @@ const ProductAdminPage = () => {
           />
         </div>
       </div>
+      <ToastContainer position="top-center" />
     </div>
   );
 };
