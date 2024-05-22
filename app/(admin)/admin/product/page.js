@@ -251,7 +251,7 @@ const ProductAdminPage = () => {
                   ? setSelectedProduct(-1)
                   : setSelectedProduct(index);
               }}
-              className={selectedProduct == index ? "bg-blue-400" : ""}
+              className={selectedProduct == index ? "bg-blue-200" : ""}
               onClickViewDetail={() => {
                 console.log("View detail");
               }}
