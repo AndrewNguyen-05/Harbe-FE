@@ -145,6 +145,7 @@ const ProductAdminPage = () => {
                 token
               );
               console.log(res);
+              await getProductData();
               // resetState();
             }}
             onCancel={() => {
