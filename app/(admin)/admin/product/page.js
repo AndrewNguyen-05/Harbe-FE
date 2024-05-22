@@ -4,6 +4,7 @@ import React from "react";
 import SearchInput from "@/components/custom/SearchInput";
 import {
   createProduct,
+  deleteProductById,
   getListProduct,
   updateProductById,
 } from "@/services/productServices";
@@ -22,6 +23,7 @@ import { ProductInfoForm } from "@/components/custom/Admin/ProductInfoForm";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CustomUpdateDialog } from "@/components/custom/Admin/CustomUpdateDialog";
+import { CustomAlertDialog } from "@/components/custom/Admin/CustomAlertDialog";
 
 const ProductAdminPage = () => {
   const [productList, setProductList] = useState([]);
@@ -102,15 +104,50 @@ const ProductAdminPage = () => {
         </div>
 
         <div className="flex flex-row justify-center items-center gap-[16px] ml-[64px]">
-          <button
-            className="border-warning border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-red-50 w-[110px]"
-            style={{ opacity: selectedProduct != -1 ? 1 : 0 }}
-          >
-            <Image alt="Bin icon" src={icBin} width={12} height={12} />
-            <div className="text-warning text-[14px] font-bold ml-[4px]">
-              Xóa
-            </div>
-          </button>
+          {/* Delete product button */}
+          <CustomAlertDialog
+            itemTrigger={
+              <button
+                className="border-warning border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-red-50 w-[110px]"
+                style={{ opacity: selectedProduct != -1 ? 1 : 0 }}
+              >
+                <Image alt="Bin icon" src={icBin} width={12} height={12} />
+                <div className="text-warning text-[14px] font-bold ml-[4px]">
+                  Xóa
+                </div>
+              </button>
+            }
+            title={"Xóa sản phẩm: " + productList[selectedProduct]?.name}
+            content={
+              "Bạn có chắc chắn muốn xóa sản phẩm này? Thao tác này không thể hoàn tác!"
+            }
+            cancelContent={"Hủy"}
+            confirmContent={"Xóa"}
+            onConfirm={async () => {
+              console.log("Confirm delete product");
+              let token = "";
+              try {
+                token = await getAccessToken();
+              } catch (error) {
+                console.log(error);
+              }
+              const res = await deleteProductById(
+                token,
+                productList[selectedProduct].id
+              );
+              console.log(res);
+              if (res.status == 200) {
+                toast.success("Xóa sản phẩm thành công");
+                await getProductData();
+                setSelectedProduct(-1);
+              } else {
+                const errorArray = Object.entries(res.data);
+                errorArray.forEach((error) => {
+                  toast.error(error[1]);
+                });
+              }
+            }}
+          />
 
           {/* Update product dialog */}
           <CustomUpdateDialog
@@ -303,6 +340,7 @@ const ProductAdminPage = () => {
               if (res.status == 201) {
                 toast.success("Tạo sản phẩm thành công");
                 await getProductData();
+                setSelectedProduct(-1);
                 resetState();
               } else {
                 const errorArray = Object.entries(res.data);
