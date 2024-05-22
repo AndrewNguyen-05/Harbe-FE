@@ -14,6 +14,7 @@ export async function middleware(request) {
   const { nextUrl } = request;
 
   const isAuthenticated = !!accessToken;
+  console.log(isAuthenticated);
   const isAdminRoute = nextUrl.pathname.startsWith(adminRoutes);
   const isPublicRoute =
     publicRoutes.includes(nextUrl.pathname) ||
@@ -21,7 +22,7 @@ export async function middleware(request) {
   const isProtectedRoute = protectedRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoute.includes(nextUrl.pathname);
 
-  if (isAdminRoute && isAuthenticated && userRole != "ADMIN") {
+  if (isAdminRoute && userRole != "ADMIN") {
     return Response.redirect(new URL("/", nextUrl));
   }
 
