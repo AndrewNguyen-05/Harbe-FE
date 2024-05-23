@@ -210,9 +210,15 @@ const ProductAdminPage = () => {
                   setProductDiscount(productList[selectedProduct].discountRate);
                   setProductQuantity(productList[selectedProduct].quantitySold);
                   setProductSpecList(
-                    productList[selectedProduct].specifications
+                    productList[selectedProduct].specifications.map((spec) => {
+                      return { name: spec.name, value: spec.value };
+                    })
                   );
-                  setProductOptionList(productList[selectedProduct].options);
+                  setProductOptionList(
+                    productList[selectedProduct].options.map((option) => {
+                      return { name: option.name, value: option.value };
+                    })
+                  );
                 }}
               >
                 <Image
