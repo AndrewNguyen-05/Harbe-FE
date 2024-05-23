@@ -306,7 +306,9 @@ const ProductAdminPage = () => {
                 }}
                 productThumbnailUrl={
                   selectedProduct != -1 &&
-                  productList[selectedProduct].thumbnailUrl
+                  productList[selectedProduct] != undefined
+                    ? productList[selectedProduct].thumbnailUrl
+                    : null
                 }
               />
             }
