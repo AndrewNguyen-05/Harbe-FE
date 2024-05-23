@@ -4,7 +4,7 @@ import React from "react";
 import SearchInput from "@/components/custom/SearchInput";
 import {
   createProduct,
-  deleteProductById,
+  deleteCart,
   getListProduct,
   updateProductById,
 } from "@/services/productServices";
@@ -131,7 +131,7 @@ const ProductAdminPage = () => {
               } catch (error) {
                 console.log(error);
               }
-              const res = await deleteProductById(
+              const res = await deleteCart(
                 token,
                 productList[selectedProduct].id
               );

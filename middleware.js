@@ -14,7 +14,6 @@ export async function middleware(request) {
   const { nextUrl } = request;
 
   const isAuthenticated = !!accessToken;
-  console.log(isAuthenticated);
   const isAdminRoute = nextUrl.pathname.startsWith(adminRoutes);
   const isPublicRoute =
     publicRoutes.includes(nextUrl.pathname) ||
