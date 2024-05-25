@@ -26,13 +26,12 @@ export default function ProductDetail() {
 
   return (
     <>
-      {product && (
+      {product && product.category && (
         <div className="bg-gray-100 px-32">
-          <BreadCrumb />
+          <BreadCrumb category={product.category} product={product} />
           <div className="flex p-0 bg-white gap-8 rounded-md">
             <section className="shrink-0 p-4 block" style={{ width: "450px" }}>
               <ProductImage product={product} />
-              <ProductSharing />
             </section>
             <section className="flex flex-auto">
               <ProductInformation product={product} />
