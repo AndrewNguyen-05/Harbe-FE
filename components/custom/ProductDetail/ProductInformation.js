@@ -193,8 +193,8 @@ export const ProductInformation = ({ product }) => {
               ))}
           </div>
           {/* Quantity */}
-          <div className="flex items-center gap-4 text-sm mt-6 h-8">
-            <div className="w-28 mt-2 text-gray-500">Số lượng </div>
+          <div className="flex items-center gap-3 text-sm mt-6 h-8">
+            <div className="w-24 mt-2 text-gray-500">Số lượng </div>
             <div className="flex items-center">
               <button
                 style={{ border: "1px solid rgba(0, 0, 0, .09)" }}
