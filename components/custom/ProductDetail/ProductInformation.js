@@ -225,7 +225,7 @@ export const ProductInformation = ({ product }) => {
           {/* Add To Cart */}
           <div className="mt-4 flex w-100 pt-5 pl-5 pr-9 text-sm">
             <button
-              className="inline-flex items-center bg-orange-100 border border-red-500 text-red-500 px-5 py-3 mr-4"
+              className="inline-flex items-center bg-white border border-blue-500 text-blue-500 px-5 py-3 mr-4"
               onClick={() => handleAddToCart()}
             >
               <svg

@@ -35,11 +35,16 @@ const ProductCard = ({ id, product }) => {
 
           {product.discountRate > 0 && (
             <>
-              {/* <div className="flex text-gray-500 line-through text-xs">
+              <div className="flex text-gray-500 line-through text-xs">
                 <div className="text-xs">₫</div>
-                <div>{trimText(convertPrice(product.price), 7)}</div>
-              </div> */}
-              <div className="bg-red-100 text-warning text-xs h-fit p-[2px] rounded-sm">
+                <div>
+                  {trimText(
+                    convertPrice(product.price),
+                    product.price.toString().length >= 8 ? 3 : 5
+                  )}
+                </div>
+              </div>
+              <div className="bg-stone-100 text-black font-semibold text-xs h-fit p-[2px] rounded-sm">
                 -{product.discountRate}%
               </div>
             </>
