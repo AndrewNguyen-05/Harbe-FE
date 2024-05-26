@@ -15,7 +15,7 @@ import { Login } from "@/components/icons/login";
 import { Profile } from "@/components/icons/profile";
 import { getAccessToken, getSession, logout } from "@/services/authServices";
 import { useRouter } from "next/navigation";
-import { getUserById } from "@/services/userServices";
+import { getUserById, getUserByProfile } from "@/services/userServices";
 import { useEffect, useState } from "react";
 import DialogAddress from "./custom/DialogAddress";
 import smileLogo from "./../public/ic_smile.svg";
@@ -31,7 +31,7 @@ const Header = () => {
     const accessToken = await getAccessToken();
 
     if (session) {
-      setUserInfo(await getUserById(session.id, accessToken));
+      setUserInfo(await getUserByProfile(accessToken));
     }
   };
 
@@ -86,7 +86,7 @@ const Header = () => {
             <DropdownMenuContent>
               <DropdownMenuItem
                 className="space-x-2 cursor-pointer"
-                onClick={() => router.push("/profile")}
+                onClick={() => router.push("/customer/account")}
               >
                 <Profile className="size-5" />
                 <span>Hồ sơ</span>
