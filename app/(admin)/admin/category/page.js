@@ -25,7 +25,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { CustomUpdateDialog } from "@/components/custom/Admin/CustomUpdateDialog";
 import { CustomAlertDialog } from "@/components/custom/Admin/CustomAlertDialog";
 
-const ProductAdminPage = () => {
+const CategoryAdminPage = () => {
   const [productList, setProductList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(8);
@@ -92,7 +92,7 @@ const ProductAdminPage = () => {
       {/* Search bar */}
       <div className="flex flex-row items-center w-full border-b-[1px] border-gray-300 px-[32px] py-[10px]">
         <div className="flex flex-row items-center mr-[64px]">
-          <div className="text-[18px] font-semibold">All products</div>
+          <div className="text-[18px] font-semibold">All categories</div>
           <div className="px-[8px] py-[1px] bg-blue-600 text-white text-[14px] rounded-[16px] ml-[12px] flex items-center justify-center">
             {totalItems}
           </div>
@@ -484,4 +484,4 @@ const ProductAdminPage = () => {
   );
 };
 
-export default ProductAdminPage;
+export default CategoryAdminPage;
