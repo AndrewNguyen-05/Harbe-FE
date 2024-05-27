@@ -5,6 +5,7 @@ import SearchInput from "@/components/custom/SearchInput";
 import {
   createProduct,
   deleteCart,
+  deleteProductById,
   getListProduct,
   updateProductById,
 } from "@/services/productServices";
@@ -130,7 +131,7 @@ const ProductAdminPage = () => {
               } catch (error) {
                 console.log(error);
               }
-              const res = await deleteCart(
+              const res = await deleteProductById(
                 token,
                 productList[selectedProduct].id
               );
@@ -150,6 +151,8 @@ const ProductAdminPage = () => {
 
           {/* Update product dialog */}
           <CustomUpdateDialog
+            confirmDialogTitle={"Bạn có chắc chắn muốn cập nhật sản phẩm này?"}
+            confirmDialogContent={"Thông tin của sản phẩm sẽ được cập nhật."}
             confirmContent={"Cập nhật"}
             onConfirm={async () => {
               console.log("Confirm update product");
@@ -316,6 +319,10 @@ const ProductAdminPage = () => {
 
           {/* Create product dialog */}
           <CustomCreateDialog
+            confirmDialogTitle={"Bạn có chắc chắn muốn thêm sản phẩm này?"}
+            confirmDialogContent={
+              "Sản phẩm sẽ được thêm vào danh sách sản phẩm."
+            }
             confirmContent={"Thêm"}
             onConfirm={async () => {
               console.log("Confirm create product");

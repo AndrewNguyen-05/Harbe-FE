@@ -2,59 +2,49 @@
 
 import React from "react";
 import SearchInput from "@/components/custom/SearchInput";
-import {
-  createProduct,
-  deleteCart,
-  getListProduct,
-  updateProductById,
-} from "@/services/productServices";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import icPlus from "@/public/ic_admin/ic_plus.svg";
 import icEditBlue from "@/public/ic_admin/ic_edit_blue.svg";
 import icBin from "@/public/ic_admin/ic_bin.svg";
 import { PaginationSelection } from "@/components/HomePage";
-import ProductRow from "@/components/custom/Admin/ProductRow";
-import CustomTable from "@/components/custom/Admin/CustomTable";
 import { CustomCreateDialog } from "@/components/custom/Admin/CustomCreateDialog";
 import { uploadFile } from "@/services/firebaseService";
 import { getAccessToken, getSession } from "@/services/authServices";
-import { ProductInfoForm } from "@/components/custom/Admin/ProductInfoForm";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CustomUpdateDialog } from "@/components/custom/Admin/CustomUpdateDialog";
 import { CustomAlertDialog } from "@/components/custom/Admin/CustomAlertDialog";
+import {
+  createCategory,
+  deleteCategoryById,
+  getCategories,
+  getCategoryById,
+  updateCategoryById,
+} from "@/services/categoryServices";
+import CategoryAdminCard from "@/components/custom/Admin/CategoryAdminCard";
+import { CustomViewDialog } from "@/components/custom/Admin/CustomViewDialog";
+import { CategoryInfoForm } from "@/components/custom/Admin/CategoryInfoForm";
 
 const CategoryAdminPage = () => {
-  const [productList, setProductList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(8);
+  const [itemsPerPage, setItemsPerPage] = useState(12);
   const [totalItems, setTotalItems] = useState();
-  const productField = [
-    { name: "Ảnh", width: "6%" },
-    { name: "Tên", width: "36%" },
-    { name: "Hãng", width: "11%" },
-    { name: "Giá", width: "11%" },
-    { name: "Giảm giá", width: "7%" },
-    { name: "Đánh giá", width: "7%" },
-    { name: "Lượt đánh giá", width: "9.5%" },
-    { name: "Số lượng", width: "9.5%" },
-  ];
-  const [selectedProduct, setSelectedProduct] = useState(-1);
-  const [productSpecList, setProductSpecList] = useState([]);
-  const [productOptionList, setProductOptionList] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [productPrice, setProductPrice] = useState(0);
-  const [productDiscount, setProductDiscount] = useState(0);
-  const [productQuantity, setProductQuantity] = useState(0);
-  const [productName, setProductName] = useState("");
-  const [productDescription, setProductDescription] = useState("");
-  const [productBrand, setProductBrand] = useState("");
+  const [categoryList, setCategoryList] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(-1);
+  const [categoryName, setCategoryName] = useState("");
+  const [categoryWithProducts, setCategoryWithProducts] = useState();
 
-  const getProductData = async () => {
-    const data = await getListProduct(currentPage, itemsPerPage);
-    setProductList(data.content);
-    setTotalItems(data.totalElements);
+  const getCategoryData = async () => {
+    const data = await getCategories();
+    setCategoryList(data);
+    setTotalItems(data.length);
+  };
+
+  const getCategoryWithProducts = async (id) => {
+    const data = await getCategoryById(id);
+    setCategoryWithProducts(data);
   };
 
   const handleFileAccepted = (files) => {
@@ -63,29 +53,13 @@ const CategoryAdminPage = () => {
 
   const resetState = () => {
     setSelectedFiles([]);
-    setProductOptionList([]);
-    setProductSpecList([]);
-    setProductPrice(0);
-    setProductDiscount(0);
-    setProductQuantity(0);
-    setProductName("");
-    setProductDescription("");
-    setProductBrand("");
   };
 
-  // const getAllProductQuantity = async () => {
-  //   const data = await getListProduct();
-  //   console.log(data);
-  //   setTotalProductQuantity(data.content.length);
-  // };
-
-  // useEffect(() => {
-  //   getAllProductQuantity();
-  // }, []);
-
   useEffect(() => {
-    getProductData();
+    getCategoryData();
   }, [currentPage]);
+
+  console.log(categoryList);
 
   return (
     <div className="flex flex-col justify-between items-center h-full">
@@ -102,13 +76,32 @@ const CategoryAdminPage = () => {
           <SearchInput placeholder={"Nhập từ khóa..."} />
         </div>
 
-        <div className="flex flex-row justify-center items-center gap-[16px] ml-[64px]">
-          {/* Delete product button */}
+        <div className="flex flex-row justify-center items-center gap-[16px] ml-[24px]">
+          {/* View category  */}
+          <CustomViewDialog
+            itemTrigger={
+              <button
+                className="border-blue-600 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-blue-50 w-[110px]"
+                style={{ opacity: selectedCategory != -1 ? 1 : 0 }}
+                onClick={() => {
+                  resetState();
+                }}
+              >
+                <div className="text-blue-600 text-[14px] font-bold ml-[4px]">
+                  Xem
+                </div>
+              </button>
+            }
+            title={categoryList[selectedCategory]?.name}
+            itemContent={<div>Xem phân loại</div>}
+          />
+
+          {/* Delete category button */}
           <CustomAlertDialog
             itemTrigger={
               <button
                 className="border-warning border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-red-50 w-[110px]"
-                style={{ opacity: selectedProduct != -1 ? 1 : 0 }}
+                style={{ opacity: selectedCategory != -1 ? 1 : 0 }}
               >
                 <Image alt="Bin icon" src={icBin} width={12} height={12} />
                 <div className="text-warning text-[14px] font-bold ml-[4px]">
@@ -116,29 +109,33 @@ const CategoryAdminPage = () => {
                 </div>
               </button>
             }
-            title={"Xóa sản phẩm: " + productList[selectedProduct]?.name}
+            title={"Xóa phân loại: " + categoryList[selectedCategory]?.name}
             content={
-              "Bạn có chắc chắn muốn xóa sản phẩm này? Thao tác này không thể hoàn tác!"
+              "Bạn có chắc chắn muốn xóa phân loại này? Thao tác này không thể hoàn tác!"
             }
             cancelContent={"Hủy"}
             confirmContent={"Xóa"}
             onConfirm={async () => {
-              console.log("Confirm delete product");
+              console.log("Confirm delete category");
               let token = "";
               try {
                 token = await getAccessToken();
               } catch (error) {
                 console.log(error);
               }
-              const res = await deleteCart(
+              const res = await deleteCategoryById(
                 token,
-                productList[selectedProduct].id
+                categoryList[selectedCategory].id
               );
               console.log(res);
               if (res.status == 200) {
-                toast.success("Xóa sản phẩm thành công");
-                await getProductData();
-                setSelectedProduct(-1);
+                toast.success("Xóa phân loại thành công");
+                await getCategoryData();
+                setSelectedCategory(-1);
+              } else if (res.status == 500) {
+                toast.error(
+                  "Không thể xóa phân loại này. Hãy xóa sản phẩm trước!"
+                );
               } else {
                 const errorArray = Object.entries(res.data);
                 errorArray.forEach((error) => {
@@ -148,40 +145,32 @@ const CategoryAdminPage = () => {
             }}
           />
 
-          {/* Update product dialog */}
+          {/* Update category dialog */}
           <CustomUpdateDialog
             confirmContent={"Cập nhật"}
             onConfirm={async () => {
-              console.log("Confirm update product");
+              console.log("Confirm update category");
               const imgURL = selectedFiles[0]
                 ? await uploadFile(selectedFiles[0])
-                : productList[selectedProduct].thumbnailUrl;
+                : categoryList[selectedCategory].thumbnailUrl;
               let token = "";
               try {
                 token = await getAccessToken();
               } catch (error) {
                 console.log(error);
               }
-              const res = await updateProductById(
+              const res = await updateCategoryById(
                 {
-                  name: productName,
-                  description: productDescription,
-                  brand: productBrand,
-                  price: productPrice,
-                  discountRate: productDiscount,
-                  quantitySold: productQuantity,
+                  name: categoryName,
                   thumbnailUrl: imgURL,
-                  options: productOptionList,
-                  specifications: productSpecList,
-                  categoryUrl: "new-cate",
                 },
                 token,
-                productList[selectedProduct].id
+                categoryList[selectedCategory].id
               );
               console.log(res);
               if (res.status == 200) {
-                toast.success("Cập nhật sản phẩm thành công");
-                await getProductData();
+                toast.success("Cập nhật phân loại thành công");
+                await getCategoryData();
                 resetState();
               } else {
                 const errorArray = Object.entries(res.data);
@@ -191,33 +180,15 @@ const CategoryAdminPage = () => {
               }
             }}
             onCancel={() => {
-              console.log("Cancel update product");
+              console.log("Cancel update category");
               resetState();
             }}
             itemTrigger={
               <button
                 className="border-blue-600 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-blue-50 w-[110px]"
-                style={{ opacity: selectedProduct != -1 ? 1 : 0 }}
+                style={{ opacity: selectedCategory != -1 ? 1 : 0 }}
                 onClick={() => {
                   resetState();
-                  setProductName(productList[selectedProduct].name);
-                  setProductDescription(
-                    productList[selectedProduct].description
-                  );
-                  setProductBrand(productList[selectedProduct].brand);
-                  setProductPrice(productList[selectedProduct].price);
-                  setProductDiscount(productList[selectedProduct].discountRate);
-                  setProductQuantity(productList[selectedProduct].quantitySold);
-                  setProductSpecList(
-                    productList[selectedProduct].specifications.map((spec) => {
-                      return { name: spec.name, value: spec.value };
-                    })
-                  );
-                  setProductOptionList(
-                    productList[selectedProduct].options.map((option) => {
-                      return { name: option.name, value: option.value };
-                    })
-                  );
                 }}
               >
                 <Image
@@ -231,94 +202,15 @@ const CategoryAdminPage = () => {
                 </div>
               </button>
             }
-            title={"Cập nhật sản phẩm"}
-            itemContent={
-              <ProductInfoForm
-                selectedFiles={selectedFiles}
-                onFileAccepted={handleFileAccepted}
-                productBrand={productBrand}
-                onProductBrandChange={(e) => {
-                  setProductBrand(e.target.value);
-                }}
-                productPrice={productPrice}
-                onProductPriceChange={(e) => {
-                  setProductPrice(e.target.value);
-                }}
-                productDiscount={productDiscount}
-                onProductDiscountChange={(e) => {
-                  setProductDiscount(e.target.value);
-                }}
-                productQuantity={productQuantity}
-                onProductQuantityChange={(e) => {
-                  setProductQuantity(e.target.value);
-                }}
-                productName={productName}
-                onProductNameChange={(e) => {
-                  setProductName(e.target.value);
-                }}
-                productDescription={productDescription}
-                onProductDescriptionChange={(e) => {
-                  setProductDescription(e.target.value);
-                }}
-                productSpecList={productSpecList}
-                onSpecAdd={() => {
-                  setProductSpecList([
-                    ...productSpecList,
-                    { name: "", value: "" },
-                  ]);
-                }}
-                onSpecRemove={(index) => {
-                  setProductSpecList(
-                    productSpecList.filter((_, i) => i != index)
-                  );
-                }}
-                onSpecNameChange={(e, index) => {
-                  const temp = [...productSpecList];
-                  temp[index].name = e.target.value;
-                  setProductSpecList(temp);
-                }}
-                onSpecValueChange={(e, index) => {
-                  const temp = [...productSpecList];
-                  temp[index].value = e.target.value;
-                  setProductSpecList(temp);
-                }}
-                productOptionList={productOptionList}
-                onOptionAdd={() => {
-                  setProductOptionList([
-                    ...productOptionList,
-                    { name: "", value: "" },
-                  ]);
-                }}
-                onOptionRemove={(index) => {
-                  setProductOptionList(
-                    productOptionList.filter((_, i) => i != index)
-                  );
-                }}
-                onOptionNameChange={(e, index) => {
-                  const temp = [...productOptionList];
-                  temp[index].name = e.target.value;
-                  setProductOptionList(temp);
-                }}
-                onOptionValueChange={(e, index) => {
-                  const temp = [...productOptionList];
-                  temp[index].value = e.target.value;
-                  setProductOptionList(temp);
-                }}
-                productThumbnailUrl={
-                  selectedProduct != -1 &&
-                  productList[selectedProduct] != undefined
-                    ? productList[selectedProduct].thumbnailUrl
-                    : null
-                }
-              />
-            }
+            title={"Cập nhật phân loại"}
+            itemContent={<div>Update cate</div>}
           />
 
-          {/* Create product dialog */}
+          {/* Create category dialog */}
           <CustomCreateDialog
             confirmContent={"Thêm"}
             onConfirm={async () => {
-              console.log("Confirm create product");
+              console.log("Confirm create category");
               const imgURL = selectedFiles[0]
                 ? await uploadFile(selectedFiles[0])
                 : "";
@@ -328,26 +220,18 @@ const CategoryAdminPage = () => {
               } catch (error) {
                 console.log(error);
               }
-              const res = await createProduct(
+              const res = await createCategory(
                 {
-                  name: productName,
-                  description: productDescription,
-                  brand: productBrand,
-                  price: productPrice,
-                  discountRate: productDiscount,
-                  quantitySold: productQuantity,
+                  name: categoryName,
                   thumbnailUrl: imgURL,
-                  options: productOptionList,
-                  specifications: productSpecList,
-                  categoryUrl: "new-cate",
                 },
                 token
               );
               console.log(res);
               if (res.status == 201) {
-                toast.success("Tạo sản phẩm thành công");
-                await getProductData();
-                setSelectedProduct(-1);
+                toast.success("Tạo phân loại thành công");
+                await getCategoryData();
+                setSelectedCategory(-1);
                 resetState();
               } else {
                 const errorArray = Object.entries(res.data);
@@ -357,7 +241,7 @@ const CategoryAdminPage = () => {
               }
             }}
             onCancel={() => {
-              console.log("Cancel create product");
+              console.log("Cancel create category");
               // resetState();
             }}
             itemTrigger={
@@ -368,106 +252,41 @@ const CategoryAdminPage = () => {
                 </div>
               </button>
             }
-            title={"Thêm sản phẩm"}
+            title={"Thêm phân loại"}
             itemContent={
-              <ProductInfoForm
+              <CategoryInfoForm
                 selectedFiles={selectedFiles}
                 onFileAccepted={handleFileAccepted}
-                productBrand={productBrand}
-                onProductBrandChange={(e) => {
-                  setProductBrand(e.target.value);
-                }}
-                productPrice={productPrice}
-                onProductPriceChange={(e) => {
-                  setProductPrice(e.target.value);
-                }}
-                productDiscount={productDiscount}
-                onProductDiscountChange={(e) => {
-                  setProductDiscount(e.target.value);
-                }}
-                productQuantity={productQuantity}
-                onProductQuantityChange={(e) => {
-                  setProductQuantity(e.target.value);
-                }}
-                productName={productName}
-                onProductNameChange={(e) => {
-                  setProductName(e.target.value);
-                }}
-                productDescription={productDescription}
-                onProductDescriptionChange={(e) => {
-                  setProductDescription(e.target.value);
-                }}
-                productSpecList={productSpecList}
-                onSpecAdd={() => {
-                  setProductSpecList([
-                    ...productSpecList,
-                    { name: "", value: "" },
-                  ]);
-                }}
-                onSpecRemove={(index) => {
-                  setProductSpecList(
-                    productSpecList.filter((_, i) => i != index)
-                  );
-                }}
-                onSpecNameChange={(e, index) => {
-                  const temp = [...productSpecList];
-                  temp[index].name = e.target.value;
-                  setProductSpecList(temp);
-                }}
-                onSpecValueChange={(e, index) => {
-                  const temp = [...productSpecList];
-                  temp[index].value = e.target.value;
-                  setProductSpecList(temp);
-                }}
-                productOptionList={productOptionList}
-                onOptionAdd={() => {
-                  setProductOptionList([
-                    ...productOptionList,
-                    { name: "", value: "" },
-                  ]);
-                }}
-                onOptionRemove={(index) => {
-                  setProductOptionList(
-                    productOptionList.filter((_, i) => i != index)
-                  );
-                }}
-                onOptionNameChange={(e, index) => {
-                  const temp = [...productOptionList];
-                  temp[index].name = e.target.value;
-                  setProductOptionList(temp);
-                }}
-                onOptionValueChange={(e, index) => {
-                  const temp = [...productOptionList];
-                  temp[index].value = e.target.value;
-                  setProductOptionList(temp);
-                }}
+                categoryName={categoryName}
+                onCategoryNameChange={(e) => setCategoryName(e.target.value)}
               />
             }
           />
         </div>
       </div>
 
-      {/* Product table data */}
+      {/* Category data */}
       <div className="flex flex-col justify-between items-center grow px-[32px] py-[20px] w-full">
-        <CustomTable
-          data={productList}
-          renderRow={(item, index) => (
-            <ProductRow
-              key={index}
-              product={item}
-              onSelected={() => {
-                selectedProduct == index
-                  ? setSelectedProduct(-1)
-                  : setSelectedProduct(index);
-              }}
-              className={selectedProduct == index ? "bg-blue-200" : ""}
-              onClickViewDetail={() => {
-                console.log("View detail");
-              }}
-            />
-          )}
-          field={productField}
-        />
+        <div className="w-full flex flex-wrap gap-[10px]">
+          {categoryList.map((item, index) => (
+            <div key={index}>
+              <CategoryAdminCard
+                category={item}
+                onSelected={() => {
+                  setSelectedCategory(index);
+                }}
+                className1={
+                  selectedCategory == index ? "bg-blue-200" : "bg-white"
+                }
+                className2={
+                  selectedCategory == index
+                    ? "border-blue-200"
+                    : "border-blue-100"
+                }
+              />
+            </div>
+          ))}
+        </div>
 
         {/* Pagination */}
         <div>
