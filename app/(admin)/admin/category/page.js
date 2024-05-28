@@ -9,7 +9,7 @@ import icEditBlue from "@/public/ic_admin/ic_edit_blue.svg";
 import icBin from "@/public/ic_admin/ic_bin.svg";
 import { PaginationSelection } from "@/components/HomePage";
 import { CustomCreateDialog } from "@/components/custom/Admin/CustomCreateDialog";
-import { uploadFile } from "@/services/firebaseService";
+import { uploadCategoryImage } from "@/services/firebaseService";
 import { getAccessToken, getSession } from "@/services/authServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -25,16 +25,28 @@ import {
 import CategoryAdminCard from "@/components/custom/Admin/CategoryAdminCard";
 import { CustomViewDialog } from "@/components/custom/Admin/CustomViewDialog";
 import { CategoryInfoForm } from "@/components/custom/Admin/CategoryInfoForm";
+import CustomTable from "@/components/custom/Admin/CustomTable";
+import ProductRow from "@/components/custom/Admin/ProductRow";
 
 const CategoryAdminPage = () => {
+  const productField = [
+    { name: "Ảnh", width: "6%" },
+    { name: "Tên", width: "34%" },
+    { name: "Hãng", width: "11%" },
+    { name: "Giá", width: "11%" },
+    { name: "Giảm giá", width: "7%" },
+    { name: "Đánh giá", width: "7%" },
+    { name: "Lượt đánh giá", width: "11.5%" },
+    { name: "Số lượng", width: "9.5%" },
+  ];
   const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(12);
+  const [itemsPerPage, setItemsPerPage] = useState(14);
   const [totalItems, setTotalItems] = useState();
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(-1);
   const [categoryName, setCategoryName] = useState("");
-  const [categoryWithProducts, setCategoryWithProducts] = useState();
+  const [categoryWithProducts, setCategoryWithProducts] = useState(null);
 
   const getCategoryData = async () => {
     const data = await getCategories();
@@ -83,8 +95,11 @@ const CategoryAdminPage = () => {
               <button
                 className="border-blue-600 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-blue-50 w-[110px]"
                 style={{ opacity: selectedCategory != -1 ? 1 : 0 }}
-                onClick={() => {
+                onClick={async () => {
                   resetState();
+                  await getCategoryWithProducts(
+                    categoryList[selectedCategory].id
+                  );
                 }}
               >
                 <div className="text-blue-600 text-[14px] font-bold ml-[4px]">
@@ -92,8 +107,33 @@ const CategoryAdminPage = () => {
                 </div>
               </button>
             }
-            title={categoryList[selectedCategory]?.name}
-            itemContent={<div>Xem phân loại</div>}
+            title={`Phân loại: ${
+              selectedCategory != -1 && categoryList[selectedCategory]?.name
+            }`}
+            itemContent={
+              <div className="w-full">
+                {/* Product count */}
+                <div className="flex flex-row items-center mr-[64px] mt-[16px]">
+                  <div className="text-[16px] font-semibold text-black">
+                    Product
+                  </div>
+                  <div className="px-[8px] py-[1px] bg-blue-600 text-white text-[14px] rounded-[16px] ml-[12px] flex items-center justify-center">
+                    {categoryWithProducts?.products.length}
+                  </div>
+                </div>
+
+                {/* Product list */}
+                {categoryWithProducts && (
+                  <CustomTable
+                    data={categoryWithProducts?.products}
+                    renderRow={(item, index) => (
+                      <ProductRow key={index} product={item} />
+                    )}
+                    field={productField}
+                  />
+                )}
+              </div>
+            }
           />
 
           {/* Delete category button */}
@@ -147,11 +187,15 @@ const CategoryAdminPage = () => {
 
           {/* Update category dialog */}
           <CustomUpdateDialog
+            confirmDialogTitle={"Bạn có chắc chắn muốn cập nhật phân loại này?"}
+            confirmDialogContent={
+              "Phân loại này sẽ được cập nhật trong cơ sở dữ liệu."
+            }
             confirmContent={"Cập nhật"}
             onConfirm={async () => {
               console.log("Confirm update category");
               const imgURL = selectedFiles[0]
-                ? await uploadFile(selectedFiles[0])
+                ? await uploadCategoryImage(selectedFiles[0])
                 : categoryList[selectedCategory].thumbnailUrl;
               let token = "";
               try {
@@ -189,6 +233,7 @@ const CategoryAdminPage = () => {
                 style={{ opacity: selectedCategory != -1 ? 1 : 0 }}
                 onClick={() => {
                   resetState();
+                  setCategoryName(categoryList[selectedCategory].name);
                 }}
               >
                 <Image
@@ -203,16 +248,33 @@ const CategoryAdminPage = () => {
               </button>
             }
             title={"Cập nhật phân loại"}
-            itemContent={<div>Update cate</div>}
+            itemContent={
+              <CategoryInfoForm
+                selectedFiles={selectedFiles}
+                onFileAccepted={handleFileAccepted}
+                categoryName={categoryName}
+                onCategoryNameChange={(e) => setCategoryName(e.target.value)}
+                categoryThumbnailUrl={
+                  selectedCategory != -1 &&
+                  categoryList[selectedCategory] != undefined
+                    ? categoryList[selectedCategory].thumbnailUrl
+                    : null
+                }
+              />
+            }
           />
 
           {/* Create category dialog */}
           <CustomCreateDialog
+            confirmDialogTitle={"Bạn có chắc chắn muốn thêm phân loại này?"}
+            confirmDialogContent={
+              "Phân loại này sẽ được thêm vào cơ sở dữ liệu."
+            }
             confirmContent={"Thêm"}
             onConfirm={async () => {
               console.log("Confirm create category");
               const imgURL = selectedFiles[0]
-                ? await uploadFile(selectedFiles[0])
+                ? await uploadCategoryImage(selectedFiles[0])
                 : "";
               let token = "";
               try {
