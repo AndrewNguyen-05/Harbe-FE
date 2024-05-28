@@ -18,7 +18,7 @@ import { PaginationSelection } from "@/components/HomePage";
 import ProductRow from "@/components/custom/Admin/ProductRow";
 import CustomTable from "@/components/custom/Admin/CustomTable";
 import { CustomCreateDialog } from "@/components/custom/Admin/CustomCreateDialog";
-import { uploadFile } from "@/services/firebaseService";
+import { uploadProductImage } from "@/services/firebaseService";
 import { getAccessToken, getSession } from "@/services/authServices";
 import { ProductInfoForm } from "@/components/custom/Admin/ProductInfoForm";
 import { ToastContainer, toast } from "react-toastify";
@@ -157,7 +157,7 @@ const ProductAdminPage = () => {
             onConfirm={async () => {
               console.log("Confirm update product");
               const imgURL = selectedFiles[0]
-                ? await uploadFile(selectedFiles[0])
+                ? await uploadProductImage(selectedFiles[0])
                 : productList[selectedProduct].thumbnailUrl;
               let token = "";
               try {
@@ -327,7 +327,7 @@ const ProductAdminPage = () => {
             onConfirm={async () => {
               console.log("Confirm create product");
               const imgURL = selectedFiles[0]
-                ? await uploadFile(selectedFiles[0])
+                ? await uploadProductImage(selectedFiles[0])
                 : "";
               let token = "";
               try {
