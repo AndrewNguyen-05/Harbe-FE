@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import logo from "@/public/ic_logo_2.svg";
+import icExit from "@/public/ic_admin/ic_exit.svg";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -56,8 +57,18 @@ const AdminSideBar = ({ menu, others }) => {
             </div>
           </Link>
         ))}
+        <button
+          onClick={() => {
+            logout();
+          }}
+        >
+          <div className="flex row items-center mt-[12px] py-[8px] pl-[12px] rounded-[8px] cursor-pointer transition-all duration-300 ease-in-out w-[160px]">
+            <Image alt={`Exit icon`} src={icExit} className="size-4 mr-2" />
+            <div className="text-red-500 text-[17px] mr-[40px]">Logout</div>
+          </div>
+        </button>
 
-        <div className="text-gray-400 font-semibold text-[14px] mt-[40px]">
+        {/* <div className="text-gray-400 font-semibold text-[14px] mt-[40px]">
           OTHERS
         </div>
         {others.map((item, index) =>
@@ -86,8 +97,8 @@ const AdminSideBar = ({ menu, others }) => {
                 </div>
               </div>
             </Link>
-          ) : (
-            <button
+          ) : ( */}
+        {/* <button
               key={index}
               onClick={() => {
                 setSelectedTab(item.name);
@@ -112,7 +123,7 @@ const AdminSideBar = ({ menu, others }) => {
               </div>
             </button>
           )
-        )}
+        )} */}
       </div>
     </div>
   );
