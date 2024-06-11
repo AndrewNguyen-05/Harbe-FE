@@ -15,8 +15,8 @@ import icPlus from "@/public/ic_admin/ic_plus.svg";
 import icEditBlue from "@/public/ic_admin/ic_edit_blue.svg";
 import icBin from "@/public/ic_admin/ic_bin.svg";
 import { PaginationSelection } from "@/components/HomePage";
-import ProductRow from "@/components/custom/Admin/ProductRow";
-import CustomTable from "@/components/custom/Admin/CustomTable";
+import ProductRow from "@/components/custom/Admin/Table/ProductRow";
+import CustomTable from "@/components/custom/Admin/Table/CustomTable";
 import { CustomCreateDialog } from "@/components/custom/Admin/Dialog/CustomCreateDialog";
 import { uploadProductImage } from "@/services/firebaseService";
 import { getAccessToken, getSession } from "@/services/authServices";
@@ -119,6 +119,7 @@ const ProductAdminPage = () => {
               <button
                 className="border-red-500 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-red-50 w-[110px]"
                 style={{ opacity: selectedProduct != -1 ? 1 : 0 }}
+                disabled={selectedProduct == -1}
               >
                 <Image alt="Bin icon" src={icBin} width={12} height={12} />
                 <div className="text-red-500 text-[14px] font-bold ml-[4px]">
@@ -228,6 +229,7 @@ const ProductAdminPage = () => {
               <button
                 className="border-blue-600 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-blue-50 w-[110px]"
                 style={{ opacity: selectedProduct != -1 ? 1 : 0 }}
+                disabled={selectedProduct == -1}
                 onClick={() => {
                   resetState();
                   setProductName(productList[selectedProduct].name);

@@ -16,7 +16,7 @@ import { usePathname } from "next/navigation";
 
 export default function AdminLayout({ children }) {
   const menu = [
-    { name: "Dashboard", icon: icDashboards, link: "/admin" },
+    // { name: "Dashboard", icon: icDashboards, link: "/admin" },
     { name: "Product", icon: icProduct, link: "/admin/product" },
     { name: "Category", icon: icTag, link: "/admin/category" },
     { name: "Order", icon: icOrder, link: "/admin/order" },

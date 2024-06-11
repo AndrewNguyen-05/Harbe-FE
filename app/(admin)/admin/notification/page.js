@@ -10,53 +10,46 @@ import icBin from "@/public/ic_admin/ic_bin.svg";
 import { PaginationSelection } from "@/components/HomePage";
 import CustomTable from "@/components/custom/Admin/Table/CustomTable";
 import { CustomCreateDialog } from "@/components/custom/Admin/Dialog/CustomCreateDialog";
-import { getAccessToken, getSession } from "@/services/authServices";
+import { getAccessToken } from "@/services/authServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CustomUpdateDialog } from "@/components/custom/Admin/Dialog/CustomUpdateDialog";
 import { CustomAlertDialog } from "@/components/custom/Admin/Dialog/CustomAlertDialog";
 import {
-  createUser,
-  deleteUserById,
-  getAllUsers,
-  updateUserById,
-} from "@/services/userServices";
-import { UserInfoForm } from "@/components/custom/Admin/Form/UserInfoForm";
-import UserRow from "@/components/custom/Admin/Table/UserRow";
+  createNotification,
+  deleteNotificationById,
+  getAllNotifications,
+  updateNotificationById,
+} from "@/services/notificationSevice";
+import { NotificationInfoForm } from "@/components/custom/Admin/Form/NotificationForm";
+import NotificationRow from "@/components/custom/Admin/Table/NotificationRow";
+import { CustomViewDialog } from "@/components/custom/Admin/Dialog/CustomViewDialog";
+import { set } from "date-fns";
 
-const UserAdminPage = () => {
-  const [userList, setUserList] = useState([]);
+const NotificationAdminPage = () => {
+  const [notificationList, setNotificationList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(9);
   const [totalItems, setTotalItems] = useState(0);
-  const userField = [
-    { name: "Tên", width: "25%" },
-    { name: "Email", width: "45%" },
-    { name: "Tên đăng nhập", width: "30%" },
+  const notificationField = [
+    { name: "Ngày tạo", width: "25%" },
+    { name: "Tiêu đề", width: "30%" },
+    { name: "Nội dung", width: "45%" },
   ];
-  const [selectedUser, setSelectedUser] = useState(-1);
-  const [userName, setUserName] = useState("");
-  const [userEmail, setUserEmail] = useState("");
-  const [userUsername, setUserUsername] = useState("");
-  const [userPassword, setUserPassword] = useState("");
+  const [selectedNotification, setSelectedNotification] = useState(-1);
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
 
-  const getUserData = async () => {
-    let token = "";
-    try {
-      token = await getAccessToken();
-    } catch (error) {
-      console.log(error);
-    }
-    const data = await getAllUsers(token, currentPage, itemsPerPage);
-    setUserList(data.content);
+  const getNotificationData = async () => {
+    const data = await getAllNotifications(currentPage, itemsPerPage);
+    console.log(data);
+    setNotificationList(data.content);
     setTotalItems(data.totalElements);
   };
 
   const resetState = () => {
-    setUserName("");
-    setUserEmail("");
-    setUserUsername("");
-    setUserPassword("");
+    setTitle("");
+    setMessage("");
   };
 
   const showError = (errorArr) => {
@@ -66,7 +59,7 @@ const UserAdminPage = () => {
   };
 
   useEffect(() => {
-    getUserData();
+    getNotificationData();
   }, [currentPage]);
 
   return (
@@ -74,7 +67,7 @@ const UserAdminPage = () => {
       {/* Search bar */}
       <div className="flex flex-row items-center w-full border-b-[1px] border-gray-300 px-[32px] py-[10px]">
         <div className="flex flex-row items-center mr-[64px]">
-          <div className="text-[18px] font-semibold">All users</div>
+          <div className="text-[18px] font-semibold">All notifications</div>
           <div className="px-[8px] py-[1px] bg-blue-600 text-white text-[14px] rounded-[16px] ml-[12px] flex items-center justify-center">
             {totalItems}
           </div>
@@ -85,13 +78,50 @@ const UserAdminPage = () => {
         </div>
 
         <div className="flex flex-row justify-center items-center gap-[16px] ml-[64px]">
-          {/* Delete user button */}
+          {/* View Noti  */}
+          <CustomViewDialog
+            itemTrigger={
+              <button
+                className="border-blue-600 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-blue-50 w-[110px]"
+                style={{ opacity: selectedNotification != -1 ? 1 : 0 }}
+                disabled={selectedNotification == -1}
+                onClick={async () => {
+                  resetState();
+                  setTitle(notificationList[selectedNotification].title);
+                  setMessage(notificationList[selectedNotification].message);
+                }}
+              >
+                <div className="text-blue-600 text-[14px] font-bold ml-[4px]">
+                  Xem
+                </div>
+              </button>
+            }
+            title={`Thông báo: ${
+              selectedNotification != -1 &&
+              notificationList[selectedNotification].title
+            }`}
+            itemContent={
+              <NotificationInfoForm
+                message={message}
+                onMessageChange={(e) => {
+                  setMessage(e.target.value);
+                }}
+                title={title}
+                onTitleChange={(e) => {
+                  setTitle(e.target.value);
+                }}
+                disabled={true}
+              />
+            }
+          />
+
+          {/* Delete noti button */}
           <CustomAlertDialog
             itemTrigger={
               <button
                 className="border-red-500 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-red-50 w-[110px]"
-                style={{ opacity: selectedUser != -1 ? 1 : 0 }}
-                disabled={selectedUser == -1}
+                style={{ opacity: selectedNotification != -1 ? 1 : 0 }}
+                disabled={selectedNotification == -1}
               >
                 <Image alt="Bin icon" src={icBin} width={12} height={12} />
                 <div className="text-red-500 text-[14px] font-bold ml-[4px]">
@@ -99,29 +129,31 @@ const UserAdminPage = () => {
                 </div>
               </button>
             }
-            title={"Xóa người dùng: " + userList[selectedUser]?.name}
+            title={
+              "Xóa thông báo: " + notificationList[selectedNotification]?.title
+            }
             content={
-              "Bạn có chắc chắn muốn xóa người dùng này? Thao tác này không thể hoàn tác!"
+              "Bạn có chắc chắn muốn xóa thông báo này? Thao tác này không thể hoàn tác!"
             }
             cancelContent={"Hủy"}
             confirmContent={"Xóa"}
             onConfirm={async () => {
-              console.log("Confirm delete user");
+              console.log("Confirm delete notification");
               let token = "";
               try {
                 token = await getAccessToken();
               } catch (error) {
                 console.log(error);
               }
-              const res = await deleteUserById(
+              const res = await deleteNotificationById(
                 token,
-                userList[selectedUser].id
+                notificationList[selectedNotification].id
               );
               console.log(res);
               if (res.status == 200) {
-                toast.success("Xóa người dùng thành công");
-                await getUserData();
-                setSelectedUser(-1);
+                toast.success("Xóa thông báo thành công");
+                await getNotificationData();
+                setSelectedNotification(-1);
               } else {
                 const errorArray = Object.entries(res.data);
                 showError(errorArray);
@@ -129,37 +161,35 @@ const UserAdminPage = () => {
             }}
           />
 
-          {/* Update user dialog */}
+          {/* Update noti dialog */}
           <CustomUpdateDialog
             confirmDialogTitle={
-              "Bạn có chắc chắn muốn cập nhật thông tin người dùng này?"
+              "Bạn có chắc chắn muốn cập nhật thông tin của thông báo này này?"
             }
             confirmDialogContent={
-              "Thông tin của người dùng sẽ được lưu vào hệ thống."
+              "Thông tin của thông báo sẽ được lưu vào hệ thống."
             }
             confirmContent={"Cập nhật"}
             onConfirm={async () => {
-              console.log("Confirm update user");
+              console.log("Confirm update notification");
               let token = "";
               try {
                 token = await getAccessToken();
               } catch (error) {
                 console.log(error);
               }
-              const res = await updateUserById(
+              const res = await updateNotificationById(
                 {
-                  name: userName,
-                  email: userEmail,
-                  username: userUsername,
-                  password: userPassword,
+                  title: title,
+                  message: message,
                 },
                 token,
-                userList[selectedUser].id
+                notificationList[selectedNotification].id
               );
               console.log(res);
               if (res.status == 200) {
-                toast.success("Cập nhật người dùng thành công");
-                await getUserData();
+                toast.success("Cập nhật thông báo thành công");
+                await getNotificationData();
                 resetState();
               } else {
                 const errorArray = Object.entries(res.data);
@@ -167,19 +197,18 @@ const UserAdminPage = () => {
               }
             }}
             onCancel={() => {
-              console.log("Cancel update user");
+              console.log("Cancel update notification");
               resetState();
             }}
             itemTrigger={
               <button
                 className="border-blue-600 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-blue-50 w-[110px]"
-                style={{ opacity: selectedUser != -1 ? 1 : 0 }}
-                disabled={selectedUser == -1}
+                style={{ opacity: selectedNotification != -1 ? 1 : 0 }}
+                disabled={selectedNotification == -1}
                 onClick={() => {
                   resetState();
-                  setUserName(userList[selectedUser].name);
-                  setUserEmail(userList[selectedUser].email);
-                  setUserUsername(userList[selectedUser].username);
+                  setTitle(notificationList[selectedNotification].title);
+                  setMessage(notificationList[selectedNotification].message);
                 }}
               >
                 <Image
@@ -193,58 +222,48 @@ const UserAdminPage = () => {
                 </div>
               </button>
             }
-            title={"Cập nhật thông tin người dùng"}
+            title={"Cập nhật thông tin thông báo"}
             itemContent={
-              <UserInfoForm
-                userUsername={userUsername}
-                onUserUsernameChange={(e) => {
-                  setUserUsername(e.target.value);
+              <NotificationInfoForm
+                message={message}
+                onMessageChange={(e) => {
+                  setMessage(e.target.value);
                 }}
-                userName={userName}
-                onUserNameChange={(e) => {
-                  setUserName(e.target.value);
-                }}
-                userEmail={userEmail}
-                onUserEmailChange={(e) => {
-                  setUserEmail(e.target.value);
-                }}
-                userPassword={userPassword}
-                onUserPasswordChange={(e) => {
-                  setUserPassword(e.target.value);
+                title={title}
+                onTitleChange={(e) => {
+                  setTitle(e.target.value);
                 }}
               />
             }
           />
 
-          {/* Create user dialog */}
+          {/* Create noti dialog */}
           <CustomCreateDialog
-            confirmDialogTitle={"Bạn có chắc chắn muốn thêm người dùng này?"}
+            confirmDialogTitle={"Bạn có chắc chắn muốn thêm thông báo này?"}
             confirmDialogContent={
-              "Thông tin người dùng sẽ được thêm vào hệ thống."
+              "Thông tin thông báo sẽ được thêm vào hệ thống."
             }
             confirmContent={"Thêm"}
             onConfirm={async () => {
-              console.log("Confirm create user");
+              console.log("Confirm create notification");
               let token = "";
               try {
                 token = await getAccessToken();
               } catch (error) {
                 console.log(error);
               }
-              const res = await createUser(
+              const res = await createNotification(
                 {
-                  name: userName,
-                  email: userEmail,
-                  username: userUsername,
-                  password: userPassword,
+                  title: title,
+                  message: message,
                 },
                 token
               );
               console.log(res);
               if (res.status == 201) {
-                toast.success("Thêm người dùng thành công");
-                await getUserData();
-                setSelectedUser(-1);
+                toast.success("Thêm thông báo thành công");
+                await getNotificationData();
+                setSelectedNotification(-1);
                 resetState();
               } else {
                 const errorArray = Object.entries(res.data);
@@ -252,7 +271,7 @@ const UserAdminPage = () => {
               }
             }}
             onCancel={() => {
-              console.log("Cancel create user");
+              console.log("Cancel create notification");
               // resetState();
             }}
             itemTrigger={
@@ -263,24 +282,16 @@ const UserAdminPage = () => {
                 </div>
               </button>
             }
-            title={"Thêm người dùng"}
+            title={"Thêm thông báo"}
             itemContent={
-              <UserInfoForm
-                userUsername={userUsername}
-                onUserUsernameChange={(e) => {
-                  setUserUsername(e.target.value);
+              <NotificationInfoForm
+                message={message}
+                onMessageChange={(e) => {
+                  setMessage(e.target.value);
                 }}
-                userName={userName}
-                onUserNameChange={(e) => {
-                  setUserName(e.target.value);
-                }}
-                userEmail={userEmail}
-                onUserEmailChange={(e) => {
-                  setUserEmail(e.target.value);
-                }}
-                userPassword={userPassword}
-                onUserPasswordChange={(e) => {
-                  setUserPassword(e.target.value);
+                title={title}
+                onTitleChange={(e) => {
+                  setTitle(e.target.value);
                 }}
               />
             }
@@ -291,20 +302,20 @@ const UserAdminPage = () => {
       {/* User table data */}
       <div className="flex flex-col justify-between items-center grow px-[32px] py-[20px] w-full">
         <CustomTable
-          data={userList}
+          data={notificationList}
           renderRow={(item, index) => (
-            <UserRow
+            <NotificationRow
               key={index}
-              user={item}
+              notification={item}
               onSelected={() => {
-                selectedUser == index
-                  ? setSelectedUser(-1)
-                  : setSelectedUser(index);
+                selectedNotification == index
+                  ? setSelectedNotification(-1)
+                  : setSelectedNotification(index);
               }}
-              className={selectedUser == index ? "bg-blue-200" : ""}
+              className={selectedNotification == index ? "bg-blue-200" : ""}
             />
           )}
-          field={userField}
+          field={notificationField}
         />
 
         {/* Pagination */}
@@ -322,4 +333,4 @@ const UserAdminPage = () => {
   );
 };
 
-export default UserAdminPage;
+export default NotificationAdminPage;
