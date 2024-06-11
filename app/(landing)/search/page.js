@@ -1,27 +1,49 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getCategoryById } from "@/services/categoryServices";
-import { useParams } from "next/navigation";
+import { searchProductByName } from "@/services/productServices";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import ProductCard from "@/components/custom/ProductCard";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
-export default function CategoryDetail() {
-  const [category, setCategory] = useState({});
+export default function SearchDetail() {
+  const [searchValue, setSearchValue] = useState("");
   const [sortedProducts, setSortedProducts] = useState([]);
   const [activeToggle, setActiveToggle] = useState(null); // State để lưu trạng thái của các toggle
-  const params = useParams();
 
-  const getCategoryData = async () => {
-    const data = await getCategoryById(params.id);
-    setCategory(data);
-    setSortedProducts(data.products); // Khởi tạo sortedProducts với products ban đầu
+  const [currentPage, setCurrentPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(30);
+  const [totalItems, setTotalItems] = useState();
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  useEffect(() => {
+    setSearchValue(searchParams.get("name"));
+  }, [searchParams]);
+
+  const getSearchData = async () => {
+    const data = await searchProductByName(searchValue);
+    console.log("Search..." + searchValue);
+    setSortedProducts(data.content);
+    setTotalItems(data.totalElements);
+    console.log(data);
   };
 
   useEffect(() => {
-    getCategoryData();
-  }, []);
+    if (searchValue !== "") {
+      getSearchData();
+    }
+  }, [searchValue]);
 
   // Hàm xử lý khi một toggle được nhấn
   const handleToggle = (toggleName) => () => {
@@ -30,9 +52,13 @@ export default function CategoryDetail() {
     );
   };
 
+  const handleBackHome = async () => {
+    router.push("/");
+  };
+
   useEffect(() => {
-    if (category && category.products) {
-      let sorted = [...category.products];
+    if (sortedProducts) {
+      let sorted = [...sortedProducts];
       if (activeToggle === "toggle1") {
         sorted.sort((a, b) => b.price - a.price);
       } else if (activeToggle === "toggle2") {
@@ -40,11 +66,13 @@ export default function CategoryDetail() {
       } else if (activeToggle === "toggle3") {
         sorted.sort((a, b) => b.discountRate - a.discountRate);
       }
-      setSortedProducts(sorted);
+      // Sử dụng một biến tạm thời để lưu kết quả sắp xếp
+      const newSortedProducts = [...sorted];
+      setSortedProducts(newSortedProducts);
     }
-  }, [activeToggle, category]);
+  }, [activeToggle]);
 
-  if (!category) {
+  if (!sortedProducts) {
     return <div>Loading...</div>;
   }
 
@@ -185,8 +213,86 @@ export default function CategoryDetail() {
                 />
               </Link>
             ))}
+          {!sortedProducts ||
+            (sortedProducts.length === 0 && (
+              <div className="flex justify-center items-center gap-4 flex-col w-full my-8">
+                <div className="font-bold text-xl text-center ">
+                  Không tìm thấy sản phẩm nào !
+                </div>
+                <button
+                  className="bg-primary w-fit text-white p-2 rounded-md shadow-sm font-semibold"
+                  onClick={handleBackHome}
+                >
+                  Quay về trang chủ
+                </button>
+              </div>
+            ))}
+        </div>
+        <div className="w-full">
+          {/* Pagination */}
+          <PaginationSelection
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
         </div>
       </div>
     </>
   );
 }
+
+export const PaginationSelection = ({
+  totalItems,
+  itemsPerPage,
+  currentPage,
+  setCurrentPage,
+}) => {
+  let pages = [];
+  for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
+    pages.push(i);
+  }
+
+  const handlePrevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleCurrentPage = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < pages.length - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  return (
+    <Pagination className="pt-4">
+      <PaginationContent className="bg-white rounded-md p-2">
+        <PaginationItem className="hover:cursor-pointer">
+          <PaginationPrevious onClick={() => handlePrevPage()} />
+        </PaginationItem>
+        {pages.map((page, index) => (
+          <PaginationItem
+            key={index}
+            className={
+              currentPage === page - 1
+                ? "bg-primary text-white rounded-md hover:cursor-pointer"
+                : "hover:cursor-pointer"
+            }
+          >
+            <PaginationLink onClick={() => handleCurrentPage(page - 1)}>
+              {page}
+            </PaginationLink>
+          </PaginationItem>
+        ))}
+        <PaginationItem className="hover:cursor-pointer">
+          <PaginationNext onClick={() => handleNextPage()} />
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  );
+};
