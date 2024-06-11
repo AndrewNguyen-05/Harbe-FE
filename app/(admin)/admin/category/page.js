@@ -25,8 +25,8 @@ import {
 import CategoryAdminCard from "@/components/custom/Admin/CategoryAdminCard";
 import { CustomViewDialog } from "@/components/custom/Admin/Dialog/CustomViewDialog";
 import { CategoryInfoForm } from "@/components/custom/Admin/Form/CategoryInfoForm";
-import CustomTable from "@/components/custom/Admin/CustomTable";
-import ProductRow from "@/components/custom/Admin/ProductRow";
+import CustomTable from "@/components/custom/Admin/Table/CustomTable";
+import ProductRow from "@/components/custom/Admin/Table/ProductRow";
 
 const CategoryAdminPage = () => {
   const productField = [
@@ -95,6 +95,7 @@ const CategoryAdminPage = () => {
               <button
                 className="border-blue-600 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-blue-50 w-[110px]"
                 style={{ opacity: selectedCategory != -1 ? 1 : 0 }}
+                disabled={selectedCategory == -1}
                 onClick={async () => {
                   resetState();
                   await getCategoryWithProducts(
@@ -142,6 +143,7 @@ const CategoryAdminPage = () => {
               <button
                 className="border-red-500 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-red-50 w-[110px]"
                 style={{ opacity: selectedCategory != -1 ? 1 : 0 }}
+                disabled={selectedCategory == -1}
               >
                 <Image alt="Bin icon" src={icBin} width={12} height={12} />
                 <div className="text-red-500 text-[14px] font-bold ml-[4px]">
@@ -231,6 +233,7 @@ const CategoryAdminPage = () => {
               <button
                 className="border-blue-600 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-blue-50 w-[110px]"
                 style={{ opacity: selectedCategory != -1 ? 1 : 0 }}
+                disabled={selectedCategory == -1}
                 onClick={() => {
                   resetState();
                   setCategoryName(categoryList[selectedCategory].name);
