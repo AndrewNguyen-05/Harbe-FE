@@ -8,13 +8,13 @@ import icPlus from "@/public/ic_admin/ic_plus.svg";
 import icEditBlue from "@/public/ic_admin/ic_edit_blue.svg";
 import icBin from "@/public/ic_admin/ic_bin.svg";
 import { PaginationSelection } from "@/components/HomePage";
-import { CustomCreateDialog } from "@/components/custom/Admin/CustomCreateDialog";
+import { CustomCreateDialog } from "@/components/custom/Admin/Dialog/CustomCreateDialog";
 import { uploadCategoryImage } from "@/services/firebaseService";
 import { getAccessToken, getSession } from "@/services/authServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { CustomUpdateDialog } from "@/components/custom/Admin/CustomUpdateDialog";
-import { CustomAlertDialog } from "@/components/custom/Admin/CustomAlertDialog";
+import { CustomUpdateDialog } from "@/components/custom/Admin/Dialog/CustomUpdateDialog";
+import { CustomAlertDialog } from "@/components/custom/Admin/Dialog/CustomAlertDialog";
 import {
   createCategory,
   deleteCategoryById,
@@ -23,8 +23,8 @@ import {
   updateCategoryById,
 } from "@/services/categoryServices";
 import CategoryAdminCard from "@/components/custom/Admin/CategoryAdminCard";
-import { CustomViewDialog } from "@/components/custom/Admin/CustomViewDialog";
-import { CategoryInfoForm } from "@/components/custom/Admin/CategoryInfoForm";
+import { CustomViewDialog } from "@/components/custom/Admin/Dialog/CustomViewDialog";
+import { CategoryInfoForm } from "@/components/custom/Admin/Form/CategoryInfoForm";
 import CustomTable from "@/components/custom/Admin/CustomTable";
 import ProductRow from "@/components/custom/Admin/ProductRow";
 
@@ -40,18 +40,18 @@ const CategoryAdminPage = () => {
     { name: "Số lượng", width: "9.5%" },
   ];
   const [currentPage, setCurrentPage] = useState(0);
-  const [itemsPerPage, setItemsPerPage] = useState(14);
-  const [totalItems, setTotalItems] = useState();
+  const [itemsPerPage, setItemsPerPage] = useState(12);
+  const [totalItems, setTotalItems] = useState(0);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(-1);
   const [categoryName, setCategoryName] = useState("");
-  const [categoryWithProducts, setCategoryWithProducts] = useState(null);
+  const [categoryWithProducts, setCategoryWithProducts] = useState();
 
   const getCategoryData = async () => {
-    const data = await getCategories();
-    setCategoryList(data);
-    setTotalItems(data.length);
+    const data = await getCategories(currentPage, itemsPerPage);
+    setCategoryList(data.content);
+    setTotalItems(data.totalElements);
   };
 
   const getCategoryWithProducts = async (id) => {
@@ -113,12 +113,12 @@ const CategoryAdminPage = () => {
             itemContent={
               <div className="w-full">
                 {/* Product count */}
-                <div className="flex flex-row items-center mr-[64px] mt-[16px]">
+                <div className="flex flex-row items-center mr-[64px] mt-[8px] mb-[16px]">
                   <div className="text-[16px] font-semibold text-black">
                     Product
                   </div>
                   <div className="px-[8px] py-[1px] bg-blue-600 text-white text-[14px] rounded-[16px] ml-[12px] flex items-center justify-center">
-                    {categoryWithProducts?.products.length}
+                    {categoryWithProducts?.products?.length}
                   </div>
                 </div>
 
@@ -140,11 +140,11 @@ const CategoryAdminPage = () => {
           <CustomAlertDialog
             itemTrigger={
               <button
-                className="border-warning border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-red-50 w-[110px]"
+                className="border-red-500 border-[1px] px-[20px] py-[6px] rounded-[8px] hover:drop-shadow-xl hover:opacity-80 flex flex-row items-center justify-center bg-red-50 w-[110px]"
                 style={{ opacity: selectedCategory != -1 ? 1 : 0 }}
               >
                 <Image alt="Bin icon" src={icBin} width={12} height={12} />
-                <div className="text-warning text-[14px] font-bold ml-[4px]">
+                <div className="text-red-500 text-[14px] font-bold ml-[4px]">
                   Xóa
                 </div>
               </button>
@@ -292,7 +292,7 @@ const CategoryAdminPage = () => {
               console.log(res);
               if (res.status == 201) {
                 toast.success("Tạo phân loại thành công");
-                await getCategoryData();
+                await getCategoryData(currentPage, itemsPerPage);
                 setSelectedCategory(-1);
                 resetState();
               } else {
@@ -328,8 +328,8 @@ const CategoryAdminPage = () => {
       </div>
 
       {/* Category data */}
-      <div className="flex flex-col justify-between items-center grow px-[32px] py-[20px] w-full">
-        <div className="w-full flex flex-wrap gap-[10px]">
+      <div className="flex flex-col justify-between items-center grow px-[32px] py-[16px] w-full">
+        <div className="w-full flex flex-wrap gap-[12px]">
           {categoryList.map((item, index) => (
             <div key={index}>
               <CategoryAdminCard

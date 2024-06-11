@@ -40,11 +40,9 @@ const AdminSideBar = ({ menu, others }) => {
             }}
           >
             <div
-              className="flex row items-center mt-[12px] py-[8px] pl-[12px] rounded-[8px] cursor-pointer transition-all duration-300 ease-in-out w-[160px]"
-              style={{
-                backgroundColor:
-                  selectedTab === item.name ? "#0077B6" : "transparent",
-              }}
+              className={`flex row items-center mt-[12px] py-[8px] pl-[12px] rounded-[8px] cursor-pointer transition-all duration-300 ease-in-out w-[160px] hover:bg-[#0077B6] ${
+                selectedTab === item.name ? "bg-[#0077B6]" : "bg-transparent"
+              }`}
             >
               <Image
                 alt={`${item.name} icon`}
