@@ -21,7 +21,7 @@ export default function SearchDetail() {
   const getSearchData = async () => {
     const data = await searchProductByName(searchValue);
     console.log("Search..." + searchValue);
-    setSortedProducts(data);
+    setSortedProducts(data.content);
     console.log(data);
   };
 
