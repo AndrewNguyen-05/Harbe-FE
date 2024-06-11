@@ -8,6 +8,8 @@ import icTag from "@/public/ic_admin/ic_tag.svg";
 import icOrder from "@/public/ic_admin/ic_order.svg";
 import icSetting from "@/public/ic_admin/ic_setting.svg";
 import icExit from "@/public/ic_admin/ic_exit.svg";
+import icUser from "@/public/ic_admin/ic_user.svg";
+import icNotification from "@/public/ic_admin/ic_notification.svg";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { usePathname } from "next/navigation";
@@ -18,6 +20,8 @@ export default function AdminLayout({ children }) {
     { name: "Product", icon: icProduct, link: "/admin/product" },
     { name: "Category", icon: icTag, link: "/admin/category" },
     { name: "Order", icon: icOrder, link: "/admin/order" },
+    { name: "User", icon: icUser, link: "/admin/user" },
+    { name: "Notification", icon: icNotification, link: "/admin/notification" },
   ];
 
   const others = [

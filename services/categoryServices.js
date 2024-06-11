@@ -1,8 +1,15 @@
 import axios from "axios";
 
-const getCategories = async () => {
+const getCategories = async (pageNo, pageSize, sortBy, sortDir) => {
   try {
-    const res = await axios.get("http://localhost:8080/api/v1/categories");
+    const res = await axios.get("http://localhost:8080/api/v1/categories", {
+      params: {
+        pageNo,
+        pageSize,
+        sortBy,
+        sortDir,
+      },
+    });
     if (res && res.data) {
       return res.data;
     }
