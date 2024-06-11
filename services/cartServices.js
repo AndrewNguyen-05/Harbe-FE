@@ -111,3 +111,23 @@ export const deleteCart = async (productId, productItemId, accessToken) => {
     return error;
   }
 };
+
+export const deleteAllCart = async (accessToken) => {
+  let config = {
+    method: "delete",
+    maxBodyLength: Infinity,
+    url: "http://localhost:8080/api/v1/carts/all",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+  try {
+    const response = axios.request(config);
+
+    if (response) {
+      return response;
+    }
+  } catch (error) {
+    return error;
+  }
+};
