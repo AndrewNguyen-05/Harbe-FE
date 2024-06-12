@@ -9,8 +9,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import iconEye from "@/public/ic_eye.svg";
 import iconHidden from "@/public/ic_hidden.svg";
+import { useRouter } from "next/navigation";
 
 const RegisterPage = () => {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -26,9 +28,13 @@ const RegisterPage = () => {
     } else {
       const res = await register(username, name, email, password);
       console.log(res);
-      if (res == "User register successfully!")
+      if (res == "User register successfully!") {
         toast.success("Đăng ký tài khoản thành công");
-      else {
+        // wait for 2 seconds
+        setTimeout(() => {
+          router.replace("/login");
+        }, 2000);
+      } else {
         if (res.email) toast.error(res.email);
         if (res.name) toast.error(res.name);
         if (res.username) toast.error(res.username);
