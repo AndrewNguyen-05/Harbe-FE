@@ -22,11 +22,18 @@ export const addToCart = async (
     body: raw,
     redirect: "follow",
   };
+  try {
+    const response = await fetch(
+      "http://localhost:8080/api/v1/carts",
+      requestOptions
+    );
 
-  await fetch("http://localhost:8080/api/v1/carts", requestOptions)
-    .then((response) => response.text())
-    .then((result) => console.log(result))
-    .catch((error) => console.error(error));
+    const successText = response.text();
+    return successText;
+  } catch (error) {
+    const errorText = error.text();
+    return errorText;
+  }
 };
 
 export const getCart = async (accessToken) => {
