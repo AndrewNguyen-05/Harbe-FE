@@ -38,12 +38,9 @@ export default function SearchDetail() {
       currentPage,
       itemsPerPage
     );
-    console.log("Search..." + searchValue);
-    console.log(data);
     setSortedProducts(data.content);
     setTotalItems(data.totalElements);
     setTotalPages(data.totalPages);
-    console.log(data);
   };
 
   useEffect(() => {
