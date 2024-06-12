@@ -23,6 +23,7 @@ export default function SearchDetail() {
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(30);
   const [totalItems, setTotalItems] = useState();
+  const [totalPages, setTotalPages] = useState();
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -32,10 +33,16 @@ export default function SearchDetail() {
   }, [searchParams]);
 
   const getSearchData = async () => {
-    const data = await searchProductByName(searchValue);
+    const data = await searchProductByName(
+      searchValue,
+      currentPage,
+      itemsPerPage
+    );
     console.log("Search..." + searchValue);
+    console.log(data);
     setSortedProducts(data.content);
     setTotalItems(data.totalElements);
+    setTotalPages(data.totalPages);
     console.log(data);
   };
 
@@ -43,7 +50,7 @@ export default function SearchDetail() {
     if (searchValue !== "") {
       getSearchData();
     }
-  }, [searchValue]);
+  }, [searchValue, currentPage]);
 
   // Hàm xử lý khi một toggle được nhấn
   const handleToggle = (toggleName) => () => {
@@ -235,6 +242,7 @@ export default function SearchDetail() {
             itemsPerPage={itemsPerPage}
             currentPage={currentPage}
             setCurrentPage={setCurrentPage}
+            totalPages={totalPages}
           />
         </div>
       </div>
@@ -247,9 +255,10 @@ export const PaginationSelection = ({
   itemsPerPage,
   currentPage,
   setCurrentPage,
+  totalPages,
 }) => {
   let pages = [];
-  for (let i = 1; i <= Math.ceil(totalItems / itemsPerPage); i++) {
+  for (let i = 1; i <= totalPages; i++) {
     pages.push(i);
   }
 
