@@ -40,7 +40,7 @@ const AdminSideBar = ({ menu, others }) => {
             }}
           >
             <div
-              className={`flex row items-center mt-[12px] py-[8px] pl-[12px] rounded-[8px] cursor-pointer transition-all duration-300 ease-in-out w-[160px] hover:bg-[#0077B6] ${
+              className={`flex row items-center mt-[24px] py-[8px] pl-[12px] rounded-[8px] cursor-pointer transition-all duration-300 ease-in-out w-[180px] hover:bg-[#0077B6] ${
                 selectedTab === item.name ? "bg-[#0077B6]" : "bg-transparent"
               }`}
             >
@@ -60,9 +60,9 @@ const AdminSideBar = ({ menu, others }) => {
             logout();
           }}
         >
-          <div className="flex row items-center mt-[12px] py-[8px] pl-[12px] rounded-[8px] cursor-pointer transition-all duration-300 ease-in-out w-[160px]">
+          <div className="flex row items-center mt-[24px] py-[8px] pl-[12px] rounded-[8px] cursor-pointer transition-all duration-300 ease-in-out w-[160px]">
             <Image alt={`Exit icon`} src={icExit} className="size-4 mr-2" />
-            <div className="text-red-500 text-[17px] mr-[40px]">Logout</div>
+            <div className="text-red-500 text-[17px] mr-[40px]">Đăng xuất</div>
           </div>
         </button>
 

@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import { getListProduct } from "@/services/productServices";
 import { getCategories } from "@/services/categoryServices";
 import { ArrowUp } from "@/components/icons/arrow-up";
+import { useRouter } from "next/router";
 
 const HomePage = () => {
   const [productList, setProductList] = useState([]);

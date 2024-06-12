@@ -131,6 +131,32 @@ const deleteUserById = async (token, id) => {
     return error.response;
   }
 };
+
+const searchUserByName = async (token, name, pageNo, pageSize) => {
+  let config = {
+    maxBodyLength: Infinity,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    params: {
+      pageNo: pageNo,
+      pageSize: pageSize,
+    },
+  };
+
+  try {
+    const res = await axios.get(
+      `http://localhost:8080/api/v1/users/search?name=${name}`,
+      config
+    );
+    if (res && res.data) {
+      return res.data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export {
   getUserById,
   getUserByProfile,
@@ -138,4 +164,5 @@ export {
   createUser,
   updateUserById,
   deleteUserById,
+  searchUserByName,
 };

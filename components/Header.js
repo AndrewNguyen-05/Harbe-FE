@@ -41,6 +41,13 @@ const Header = () => {
     setCartItems(await getCart(accessToken));
   };
 
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleSearchProduct = async (event) => {
+    event.preventDefault();
+    router.push("/search?name=" + searchValue);
+  };
+
   useEffect(() => {
     (async () => {
       setAccessToken(await getAccessToken());
@@ -70,7 +77,12 @@ const Header = () => {
 
       {/* Search */}
       <div className="flex-grow pr-10 ml-10">
-        <SearchInput placeholder={"Bạn tìm gì hôm nay"} />
+        <SearchInput
+          placeholder={"Bạn tìm gì hôm nay"}
+          value={searchValue}
+          onValueChange={(e) => setSearchValue(e.target.value)}
+          onSubmit={handleSearchProduct}
+        />
       </div>
 
       {/* Buttons */}

@@ -19,6 +19,7 @@ import {
   createUser,
   deleteUserById,
   getAllUsers,
+  searchUserByName,
   updateUserById,
 } from "@/services/userServices";
 import { UserInfoForm } from "@/components/custom/Admin/Form/UserInfoForm";
@@ -39,6 +40,24 @@ const UserAdminPage = () => {
   const [userEmail, setUserEmail] = useState("");
   const [userUsername, setUserUsername] = useState("");
   const [userPassword, setUserPassword] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+
+  const getSearchUserData = async () => {
+    let token = "";
+    try {
+      token = await getAccessToken();
+    } catch (error) {
+      console.log(error);
+    }
+    const data = await searchUserByName(
+      token,
+      searchValue,
+      currentPage,
+      itemsPerPage
+    );
+    setUserList(data.content);
+    setTotalItems(data.totalElements);
+  };
 
   const getUserData = async () => {
     let token = "";
@@ -66,7 +85,11 @@ const UserAdminPage = () => {
   };
 
   useEffect(() => {
-    getUserData();
+    if (searchValue && searchValue.length > 0) {
+      getSearchUserData();
+    } else {
+      getUserData();
+    }
   }, [currentPage]);
 
   return (
@@ -74,14 +97,26 @@ const UserAdminPage = () => {
       {/* Search bar */}
       <div className="flex flex-row items-center w-full border-b-[1px] border-gray-300 px-[32px] py-[10px]">
         <div className="flex flex-row items-center mr-[64px]">
-          <div className="text-[18px] font-semibold">All users</div>
+          <div className="text-[18px] font-semibold">Tổng người dùng</div>
           <div className="px-[8px] py-[1px] bg-blue-600 text-white text-[14px] rounded-[16px] ml-[12px] flex items-center justify-center">
             {totalItems}
           </div>
         </div>
 
         <div className="grow">
-          <SearchInput placeholder={"Nhập từ khóa..."} />
+          <SearchInput
+            placeholder={"Nhập từ khóa tên người dùng..."}
+            value={searchValue}
+            onValueChange={(e) => setSearchValue(e.target.value)}
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (searchValue && searchValue.length > 0) {
+                getSearchUserData();
+              } else {
+                getUserData();
+              }
+            }}
+          />
         </div>
 
         <div className="flex flex-row justify-center items-center gap-[16px] ml-[64px]">
