@@ -83,13 +83,13 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <Link href={"/"} className="hover:text-gray-600">
+          {/* <Link href={"/"} className="hover:text-gray-600">
             <div className="text-[14px] text-primary mt-[8px] hover:decoration-solid hover:underline">
               Quên mật khẩu
             </div>
-          </Link>
+          </Link> */}
 
-          <div className="mt-[32px] flex flex-row justify-center items-center">
+          {/* <div className="mt-[32px] flex flex-row justify-center items-center">
             <div className="w-[64px] border-[1px] h-[0px] border-gray-300"></div>
             <div className="text-[14px] text-gray-500 mx-[32px]">HOẶC</div>
             <div className="w-[64px] border-[1px] h-[0px] border-gray-300"></div>
@@ -115,7 +115,7 @@ export default function LoginPage() {
               ></Image>
               <div className="text-[14px] ml-[8px]">Google</div>
             </button>
-          </div>
+          </div> */}
 
           <div className="flex flex-row justify-center items-center mt-[32px] text-[14px] text-gray-500">
             <div>Bạn mới biết đến Harbe?</div>
