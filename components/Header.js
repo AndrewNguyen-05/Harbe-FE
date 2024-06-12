@@ -59,7 +59,9 @@ const Header = () => {
     fetchCartItems(accessToken);
   }, [accessToken]);
 
-  console.log("cartItems from header", cartItems);
+  useEffect(() => {
+    fetchCartItems(accessToken);
+  }, [cartItems]);
 
   return (
     <div className="sticky top-0 z-50 flex flex-row justify-between items-center px-32 py-2 bg-white w-full">

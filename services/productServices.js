@@ -100,7 +100,7 @@ const deleteProductById = async (token, id) => {
   }
 };
 
-const searchProductByName = async (name, pageNo, pageSize) => {
+const searchProductByName = async (name, pageNo, pageSize, sortBy, sortDir) => {
   try {
     const res = await axios.get(
       `http://localhost:8080/api/v1/products/search?name=${name}`,
@@ -108,6 +108,8 @@ const searchProductByName = async (name, pageNo, pageSize) => {
         params: {
           pageNo,
           pageSize,
+          sortBy,
+          sortDir,
         },
       }
     );
