@@ -24,6 +24,7 @@ import {
 } from "@/services/userServices";
 import { UserInfoForm } from "@/components/custom/Admin/Form/UserInfoForm";
 import UserRow from "@/components/custom/Admin/Table/UserRow";
+import { set } from "date-fns";
 
 const UserAdminPage = () => {
   const [userList, setUserList] = useState([]);
@@ -31,9 +32,12 @@ const UserAdminPage = () => {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [totalItems, setTotalItems] = useState(0);
   const userField = [
-    { name: "Tên", width: "25%" },
-    { name: "Email", width: "45%" },
-    { name: "Tên đăng nhập", width: "30%" },
+    { name: "Tên", width: "12%" },
+    { name: "Ngày sinh", width: "8%" },
+    { name: "Giới tính", width: "6%" },
+    { name: "Email", width: "28%" },
+    { name: "Số điện thoại", width: "14%" },
+    { name: "Tên đăng nhập", width: "18%" },
   ];
   const [selectedUser, setSelectedUser] = useState(-1);
   const [userName, setUserName] = useState("");
@@ -41,6 +45,9 @@ const UserAdminPage = () => {
   const [userUsername, setUserUsername] = useState("");
   const [userPassword, setUserPassword] = useState("");
   const [searchValue, setSearchValue] = useState("");
+  const [userBirthDate, setUserBirthDate] = useState(new Date());
+  const [gender, setGender] = useState("");
+  const [phone, setPhone] = useState("");
 
   const getSearchUserData = async () => {
     let token = "";
@@ -76,6 +83,9 @@ const UserAdminPage = () => {
     setUserEmail("");
     setUserUsername("");
     setUserPassword("");
+    setUserBirthDate(new Date());
+    setGender("");
+    setPhone("");
   };
 
   const showError = (errorArr) => {
@@ -187,6 +197,7 @@ const UserAdminPage = () => {
                   email: userEmail,
                   username: userUsername,
                   password: userPassword,
+                  phone: phone,
                 },
                 token,
                 userList[selectedUser].id
@@ -215,6 +226,7 @@ const UserAdminPage = () => {
                   setUserName(userList[selectedUser].name);
                   setUserEmail(userList[selectedUser].email);
                   setUserUsername(userList[selectedUser].username);
+                  setPhone(userList[selectedUser].phone);
                 }}
               >
                 <Image
@@ -247,6 +259,15 @@ const UserAdminPage = () => {
                 onUserPasswordChange={(e) => {
                   setUserPassword(e.target.value);
                 }}
+                userBirthDate={userBirthDate}
+                onUserBirthDateSelected={setUserBirthDate}
+                gender={gender}
+                onFemaleSelected={() => setGender("female")}
+                onMaleSelected={() => setGender("male")}
+                userPhone={phone}
+                onUserPhoneChange={(e) => {
+                  setPhone(e.target.value);
+                }}
               />
             }
           />
@@ -272,6 +293,7 @@ const UserAdminPage = () => {
                   email: userEmail,
                   username: userUsername,
                   password: userPassword,
+                  phone: phone,
                 },
                 token
               );
@@ -316,6 +338,15 @@ const UserAdminPage = () => {
                 userPassword={userPassword}
                 onUserPasswordChange={(e) => {
                   setUserPassword(e.target.value);
+                }}
+                userBirthDate={userBirthDate}
+                onUserBirthDateSelected={setUserBirthDate}
+                gender={gender}
+                onFemaleSelected={() => setGender("female")}
+                onMaleSelected={() => setGender("male")}
+                userPhone={phone}
+                onUserPhoneChange={(e) => {
+                  setPhone(e.target.value);
                 }}
               />
             }
