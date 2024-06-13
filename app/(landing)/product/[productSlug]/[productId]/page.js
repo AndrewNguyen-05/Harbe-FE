@@ -35,7 +35,7 @@ export default function ProductDetail() {
     }
   }, [params.productId]);
 
-  console.log(product);
+  // console.log(product);
 
   return (
     <>
