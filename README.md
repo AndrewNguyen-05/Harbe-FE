@@ -19,7 +19,7 @@ Link to Backend repo: [Harbe](https://github.com/AndrewNguyen-05/Harbe)
 - You can see the report [here](https://drive.google.com/file/d/1MxEw0X9wGU1nWqVVXuw1AJ_YOFRNLfJf/view?usp=sharing)
 
 <div align="center">
-  <img src="https://drive.usercontent.google.com/download?id=1wA261jIeTtkyrxBmq26IfKA-y42YSGLA", alt="Application Architecture" />
+  <img src="app-resources/Picture17.png", alt="Application Architecture" />
   <p><i>Application Architecture</i></p>
 </div>
 
