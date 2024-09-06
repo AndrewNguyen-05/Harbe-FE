@@ -43,37 +43,37 @@ Link to Backend repo: [Harbe](https://github.com/AndrewNguyen-05/Harbe)
 Some of the pictures of this Application
 
 <div align="center">
-  <img src="https://drive.usercontent.google.com/download?id=1HTNiTjRbaw2OBLpsNVuFIcyTEBNm2A0L", alt="Login" width="600" />
+  <img src="app-resources/Picture1.png", alt="Login" width="600" />
   <p><i>Login Screen</i></p>
 </div>
 
 <div align="center">
-  <img src="https://drive.usercontent.google.com/download?id=1wxsy6LTbUrVLR8fEzHXqMldh12AyBOV-", alt="Home page" width="600" />
+  <img src="app-resources/Picture3.png", alt="Home page" width="600" />
   <p><i>Homepage Screen</i></p>
 </div>
 
 <div align="center">
-  <img src="https://drive.usercontent.google.com/download?id=1EPww4kKBp0hoBXJY6THnOA944H3dRoTh", alt="Detail product" width="600" />
+  <img src="app-resources/Picture2.png", alt="Detail product" width="600" />
   <p><i>Detail product Screen</i></p>
 </div>
 
 <div align="center">
-  <img src="https://drive.usercontent.google.com/download?id=1u87z1HMVw_gqhbb_mLWOll6SAKYg_4YN", alt="Admin product" width="600" />
+  <img src="app-resources/Picture4.jpg", alt="Admin product" width="600" />
   <p><i>Admin product Screen</i></p>
 </div>
 
 <div align="center">
-  <img src="https://drive.usercontent.google.com/download?id=1me2eXmLFN1a_zbTmwXByag7D3qqmubc5", alt="Admin detail product" width="600" />
+  <img src="app-resources/Picture5.jpg", alt="Admin detail product" width="600" />
   <p><i>Admin detail product Screen</i></p>
 </div>
 
 <div align="center">
-  <img src="https://drive.usercontent.google.com/download?id=1ApBBbfnX3Por40SeLXLbRlDsFQ6cuTnl", alt="Admin update product" width="600" />
+  <img src="app-resources/Picture6.jpg", alt="Admin update product" width="600" />
   <p><i>Admin update product Screen</i></p>
 </div>
 
 <div align="center">
-  <img src="https://drive.usercontent.google.com/download?id=1nwNTKpyL-vBMU5Myb8mOT8abtpEeksrO", alt="Cart" width="600" />
+  <img src="app-resources/Picture15.png", alt="Cart" width="600" />
   <p><i>Cart Screen</i></p>
 </div>
 
