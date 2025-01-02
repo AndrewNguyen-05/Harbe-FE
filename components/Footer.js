@@ -55,7 +55,7 @@ const Footer = () => {
                 </span>
               </Link>
             </div>
-            <div className="grid grid-cols-2">
+            {/* <div className="grid grid-cols-2">
               <span className="text-gray-500 text-xs">Frontend Developer:</span>
               <Link
                 className="flex"
@@ -65,7 +65,7 @@ const Footer = () => {
                   Đình Tâm
                 </span>
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="flex flex-col gap-4 w-1/5">

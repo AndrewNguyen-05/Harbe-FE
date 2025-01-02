@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { searchProductByName } from "@/services/productServices";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import ProductCard from "@/components/custom/ProductCard";
@@ -15,7 +15,16 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-export default function SearchDetail() {
+
+export default function SearchPage() {
+  return <>
+  <Suspense fallback={<div>Loading...</div>}>
+    <SearchDetail />
+  </Suspense>;
+  </>
+}
+
+function SearchDetail() {
   const [searchValue, setSearchValue] = useState("");
   const [sortedProducts, setSortedProducts] = useState([]);
   const [activeToggle, setActiveToggle] = useState(null); // State để lưu trạng thái của các toggle
